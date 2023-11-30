@@ -1,0 +1,24 @@
+import { BarChart3, Database, MessageSquare, Save } from "lucide-react";
+
+export const navList = [
+  {
+    name: "SQL Generation",
+    path: "/",
+    icon: <MessageSquare />,
+  },
+  {
+    name: "Datasource",
+    path: "/datasource",
+    icon: <Database />,
+  },
+  {
+    name: "Data dashboard",
+    path: "/dashboard",
+    icon: <BarChart3 />,
+  },
+  {
+    name: "Snippet",
+    path: "/snippet",
+    icon: <Save />,
+  },
+];
