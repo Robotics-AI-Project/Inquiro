@@ -12,7 +12,7 @@ export const navList = [
     icon: <Database />,
   },
   {
-    name: "Data dashboard",
+    name: "Dashboard",
     path: "/dashboard",
     icon: <BarChart3 />,
   },
