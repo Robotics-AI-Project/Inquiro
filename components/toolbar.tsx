@@ -1,7 +1,19 @@
-import { PropsWithChildren } from "react";
+import { cn } from "@/lib/utils";
+import { DetailedHTMLProps, HTMLAttributes } from "react";
 
-const Toolbar = ({ children }: PropsWithChildren) => {
-  return <aside className="border-r-[1px] border-border p-4">{children}</aside>;
+const Toolbar = ({
+  children,
+  className,
+  ...props
+}: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>) => {
+  return (
+    <aside
+      className={cn("border-r-[1px] border-border p-4", className)}
+      {...props}
+    >
+      {children}
+    </aside>
+  );
 };
 
 export default Toolbar;
