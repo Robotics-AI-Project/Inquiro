@@ -11,7 +11,7 @@ const Sidebar = (props: Props) => {
       <div className="flex w-full flex-col space-y-8">
         <div className="flex h-8 w-8 items-center justify-center">
           <Image
-            src="/inquiro.svg"
+            src="/assets/inquiro.svg"
             alt="Inquiro"
             height={24}
             width={24 * (1 / 1.5)}

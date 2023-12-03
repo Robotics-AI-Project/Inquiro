@@ -14,8 +14,8 @@ const Message = ({ agent, children }: Props) => {
   const { user, isLoaded } = useUser();
 
   const imageUrl = useMemo(() => {
-    if (agent === "bot") return "/inquiro-profile.svg";
-    return user?.imageUrl ?? "/user-profile.png";
+    if (agent === "bot") return "/assets/inquiro-profile.svg";
+    return user?.imageUrl ?? "/assets/user-profile.png";
   }, [agent, user?.imageUrl]);
   return (
     <div

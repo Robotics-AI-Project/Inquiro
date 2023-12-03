@@ -40,7 +40,7 @@ const Page = (props: Props) => {
               <div className="flex space-x-2">
                 <Image
                   alt="postgresql"
-                  src="/database/postgresql.svg"
+                  src="/assets/database/postgresql.svg"
                   width={24}
                   height={24}
                 />
@@ -52,7 +52,7 @@ const Page = (props: Props) => {
               <div className="flex items-center space-x-2">
                 <Image
                   alt="sqlite"
-                  src="/database/sqlite.svg"
+                  src="/assets/database/sqlite.svg"
                   width={24}
                   height={24}
                 />
