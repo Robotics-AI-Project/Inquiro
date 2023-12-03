@@ -18,10 +18,10 @@ const Navigation = () => {
             href={navItem.path}
             key={navItem.path}
             className={cn(
-              "relative flex items-center transition-all duration-150",
+              "relative flex items-center rounded-lg transition-all duration-150",
               isActive
                 ? "font-semibold text-secondary-foreground group-hover:bg-secondary"
-                : "text-foreground hover:bg-muted",
+                : "text-gray-600 hover:bg-muted",
             )}
           >
             <Button
