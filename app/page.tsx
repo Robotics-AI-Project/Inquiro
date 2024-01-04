@@ -1,23 +1,23 @@
-import Header from "@/components/pages/chat/header";
-import Message from "@/components/pages/chat/message";
-import MessageInput from "@/components/pages/chat/message-input";
-import Visualization from "@/components/pages/chat/visualization";
-import Toolbar from "@/components/toolbar";
-import { Button } from "@/components/ui/button";
+import Header from "@client/components/pages/chat/header";
+import Message from "@client/components/pages/chat/message";
+import MessageInput from "@client/components/pages/chat/message-input";
+import Visualization from "@client/components/pages/chat/visualization";
+import Toolbar from "@client/components/toolbar";
+import { Button } from "@client/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@client/components/ui/dropdown-menu";
+import { ScrollArea } from "@client/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@client/components/ui/select";
 import { MoreHorizontal, Pencil, Plus, Trash } from "lucide-react";
 
 export default function Home() {

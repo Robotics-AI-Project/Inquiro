@@ -1,9 +1,9 @@
-import { columns } from "@/components/pages/datasource/columns";
-import { DataTable } from "@/components/pages/datasource/data-table";
-import Toolbar from "@/components/toolbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Datasource } from "@/types/datasource";
+import { columns } from "@client/components/pages/datasource/columns";
+import { DataTable } from "@client/components/pages/datasource/data-table";
+import Toolbar from "@client/components/toolbar";
+import { Button } from "@client/components/ui/button";
+import { Input } from "@client/components/ui/input";
+import { Datasource } from "@client/types/datasource";
 import { Search } from "lucide-react";
 import Image from "next/image";
 

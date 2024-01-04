@@ -1,7 +1,7 @@
-import Header from "@/components/header";
-import Sidebar from "@/components/sidebar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/client/libs/utils";
 import { ClerkProvider } from "@clerk/nextjs";
+import Header from "@client/components/header";
+import Sidebar from "@client/components/sidebar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";

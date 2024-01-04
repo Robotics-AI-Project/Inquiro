@@ -1,9 +1,9 @@
 "use client";
-import Toolbar from "@/components/toolbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Tree, TreeDataItem } from "@/components/ui/tree";
+import Toolbar from "@client/components/toolbar";
+import { Button } from "@client/components/ui/button";
+import { Input } from "@client/components/ui/input";
+import { Separator } from "@client/components/ui/separator";
+import { Tree, TreeDataItem } from "@client/components/ui/tree";
 import { Plus, Search, Shield, Ticket } from "lucide-react";
 import { useState } from "react";
 

@@ -1,8 +1,8 @@
 import Elysia from "elysia";
-import { chatModel } from "./models/chat";
+import { chatModule } from "./modules/chat";
 
 export const backendApp = new Elysia({ prefix: "/api" })
   .get("/health", () => "OK")
-  .use(chatModel);
+  .use(chatModule);
 
 export type BackendApp = typeof backendApp;

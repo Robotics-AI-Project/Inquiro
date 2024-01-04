@@ -1,21 +1,21 @@
 "use client";
 
-import SQL from "@/components/sql";
-import Toolbar from "@/components/toolbar";
-import { Button } from "@/components/ui/button";
+import SQL from "@client/components/sql";
+import Toolbar from "@client/components/toolbar";
+import { Button } from "@client/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from "@client/components/ui/dropdown-menu";
+import { Input } from "@client/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@client/components/ui/tooltip";
 import {
   Check,
   Copy,
