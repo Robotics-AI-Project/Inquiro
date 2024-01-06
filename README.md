@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Inquiro Text-To-SQL
 
-## Getting Started
+## Introduction
 
-First, run the development server:
+This is a repository for the Inquiro Text-To-SQL project. The goal of this project is to create a system that can take a natural language question and convert it into a SQL query that can be run on a database. This project is being developed by a team of students at International School of Engineering (ISE) at Chulalongkorn University as a part of Robotics & AI Senior Project course.
+
+## Installation
+
+### Prerequisites
+
+This project requires the following software to be installed on your system:
+
+- Linux, macOS, or WSL (Windows is not supported)
+- [Bun](https://bun.sh)
+
+Please note that this project mainly utilizes Bun capabilities. This means that other package managers such as `npm` and `yarn` are not supported.
+
+### Set up Develpment Server
+
+1. Clone this repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+git clone git@github.com:Robotics-AI-Project/Inquiro-Frontend-v3.git
+```
+
+2. Copy the `.env.tempalte` file to `.env.local`:
+
+```bash
+cp .env.tempalte .env.local
+```
+
+and fill in the required values.
+
+3. Install the dependencies:
+
+```bash
+bun install
+```
+
+4. Run the development server:
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- You'll be able to access the development server at `http://localhost:3000`.
+- You'll also be able to access Swagger UI at `http://localhost:3000/api/swagger`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+This repository contains both frontend and backend code. Please refer to the following files for further explaination of the project structure:
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [Frontend README](./markdown/frontend.md)
+- [Backend README](./markdown/backend.md)
