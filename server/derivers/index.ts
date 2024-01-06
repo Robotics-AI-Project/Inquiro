@@ -1,6 +1,6 @@
 import { clerkContext } from "./clerk";
 
-export const deriverSetup = async () => {
+export const derivers = async () => {
   return {
     clerk: await clerkContext(),
   };
