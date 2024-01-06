@@ -1,11 +1,10 @@
 import { basePrivateBackend } from "@/server/setup";
-import { getAllChats, getChatById } from "./chat.service";
 
-export const chatModule = basePrivateBackend.group("/chat", (app) =>
+export const snippetModule = basePrivateBackend.group("/snippet", (app) =>
   app
-    .get("/", ({ clerk }) => getAllChats(clerk.id), {
+    .get("/", ({ clerk }) => `Hello snippet ${clerk.id}`, {
       detail: {
-        tags: ["chat"],
+        tags: ["snippet"],
         security: [
           {
             bearer: [],
@@ -14,11 +13,12 @@ export const chatModule = basePrivateBackend.group("/chat", (app) =>
       },
     })
     .get(
-      "/:chatId",
-      ({ clerk, params }) => getChatById(clerk.id, params.chatId),
+      "/:snippetId",
+      ({ clerk, params }) =>
+        `Hello snippet ${clerk.id} and snippet id ${params.snippetId}`,
       {
         detail: {
-          tags: ["chat"],
+          tags: ["snippet"],
           security: [
             {
               bearer: [],

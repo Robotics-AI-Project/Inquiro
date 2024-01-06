@@ -1,8 +1,14 @@
-import Elysia from "elysia";
-import { chatModule } from "./modules/chat";
+import { registerModule } from "./modules";
+import {
+  basePrivateBackend,
+  intializeBaseBackend,
+  publicBackend,
+} from "./setup";
 
-export const backendApp = new Elysia({ prefix: "/api" })
-  .get("/health", () => "OK")
-  .use(chatModule);
+const privateBackend = registerModule(basePrivateBackend);
+
+export const backendApp = intializeBaseBackend()
+  .use(publicBackend)
+  .use(privateBackend);
 
 export type BackendApp = typeof backendApp;
