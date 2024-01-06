@@ -50,5 +50,5 @@ bun dev
 
 This repository contains both frontend and backend code. Please refer to the following files for further explaination of the project structure:
 
-- [Frontend README](./markdown/frontend.md)
-- [Backend README](./markdown/backend.md)
+- [Frontend README](./client/README.md)
+- [Backend README](./server/README.md)
