@@ -1,6 +1,6 @@
 # Backend Server
 
-This project's backend will be utilizing Next.js API handler to create a serverless API. The backend server will be the main orchestrator of the application. It will be responsible for handling all the business logic, data processing, and AI inference.
+This project's backend will be utilizing [Next.js API handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) to create serverless APIs. The backend server will be the main orchestrator of the application. It will be responsible for handling all the business logic, data processing, and AI inference.
 
 The backend server's framework of choice is [Elysia.js](https://elysiajs.com/) which is a framework built on [Bun](https://bun.sh). Elysia.js offers a more performant and scalable alternative to Express.js. It also offers a more intuitive and easier to use API. The reason why Elysia.js is chosen is mainly due to development ergonomics and performance. Elysia.js also offers [Eden Treaty](https://elysiajs.com/eden/treaty.html#eden-treaty) which is a type-safe client side library that can be used to communicate with the backend server, allowing for more robust and type-safe communication between the client and the server.
 
