@@ -1,7 +1,7 @@
 import { metadataDb } from "@/server/configs/db";
 
 export const getAllChats = async (userId: string) => {
-  return metadataDb.chat.findMany({
+  return await metadataDb.chat.findMany({
     where: {
       userId,
     },
@@ -13,11 +13,17 @@ export const getAllChats = async (userId: string) => {
   });
 };
 
-export const getChatMessagesById = (chatId: string) => {
-  return metadataDb.message.findMany({
+export const updateChatById = async (
+  chatId: string,
+  data: {
+    name?: string;
+  },
+) => {
+  return await metadataDb.chat.update({
     where: {
-      chatId,
+      id: chatId,
     },
+    data,
   });
 };
 
@@ -25,10 +31,21 @@ export const createChat = async (
   userId: string,
   name: string | undefined = "Untitled chat",
 ) => {
-  return metadataDb.chat.create({
+  return await metadataDb.chat.create({
     data: {
       name,
       userId,
+    },
+  });
+};
+
+export const deleteChatById = async (chatId: string) => {
+  return await metadataDb.chat.delete({
+    where: {
+      id: chatId,
+    },
+    select: {
+      id: true,
     },
   });
 };

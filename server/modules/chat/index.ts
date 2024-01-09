@@ -1,6 +1,11 @@
 import { basePrivateBackend } from "@/server/setup";
 import { t } from "elysia";
-import { createChat, getAllChats, getChatMessagesById } from "./chat.service";
+import {
+  createChat,
+  deleteChatById,
+  getAllChats,
+  updateChatById,
+} from "./chat.service";
 
 export const chatModule = basePrivateBackend.group("/chat", (app) =>
   app
@@ -52,38 +57,51 @@ export const chatModule = basePrivateBackend.group("/chat", (app) =>
       ),
       detail: {
         tags: ["chat"],
-      },
-    })
-    .get("/:chatId", ({ params }) => getChatMessagesById(params.chatId), {
-      detail: {
-        tags: ["chat"],
-        description: "Get all messages of user in chat",
+        description: "Create chat",
         security: [
           {
             bearer: [],
           },
         ],
-        responses: {
-          200: {
-            description: "OK",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id: {
-                        type: "string",
-                      },
-                      name: {
-                        type: "string",
-                      },
-                      createdAt: {
-                        type: "string",
-                      },
-                      updatedAt: {
-                        type: "string",
+      },
+    })
+    .patch(
+      "/:chatId",
+      ({ params, body }) => updateChatById(params.chatId, body),
+      {
+        body: t.Object({
+          name: t.Optional(t.String()),
+        }),
+        detail: {
+          tags: ["chat"],
+          description: "Get all messages of user in chat",
+          security: [
+            {
+              bearer: [],
+            },
+          ],
+          responses: {
+            200: {
+              description: "OK",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "string",
+                        },
+                        name: {
+                          type: "string",
+                        },
+                        createdAt: {
+                          type: "string",
+                        },
+                        updatedAt: {
+                          type: "string",
+                        },
                       },
                     },
                   },
@@ -92,6 +110,17 @@ export const chatModule = basePrivateBackend.group("/chat", (app) =>
             },
           },
         },
+      },
+    )
+    .delete("/:chatId", ({ params }) => deleteChatById(params.chatId), {
+      detail: {
+        tags: ["chat"],
+        description: "Delete chat by id",
+        security: [
+          {
+            bearer: [],
+          },
+        ],
       },
     }),
 );
