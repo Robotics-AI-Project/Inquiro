@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+enum Agent {
+  CHATBOT
+  USER
+}
+
+model Datasource {
+  id        String   @id @default(uuid())
+  name      String
+  engine    String
+  userId    String   @map("user_id")
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("datasource")
+}
+
+model Chat {
+  id        String    @id @default(uuid())
+  name      String?
+  userId    String    @map("user_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  Message   Message[]
+
+  @@index([userId])
+  @@map("chat")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  agent     Agent
+  chatId    String   @map("chat_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  chat      Chat     @relation(fields: [chatId], references: [id])
+
+  @@index([chatId])
+  @@map("message")
+}
