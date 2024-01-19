@@ -1,4 +1,5 @@
 import { cn } from "@/client/libs/utils";
+import Providers from "@/client/providers";
 import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@client/components/header";
 import Sidebar from "@client/components/sidebar";
@@ -27,12 +28,14 @@ export default function RootLayout({
             "relative flex h-screen w-screen overflow-hidden overscroll-none",
           )}
         >
-          <div className="h-full w-14" />
-          <Sidebar />
-          <div className="flex w-full flex-col">
-            <Header />
-            <section className="h-full w-full">{children}</section>
-          </div>
+          <Providers>
+            <div className="h-full w-14" />
+            <Sidebar />
+            <div className="flex w-full flex-col">
+              <Header />
+              <section className="h-full w-full">{children}</section>
+            </div>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

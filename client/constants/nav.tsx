@@ -3,7 +3,7 @@ import { BarChart3, Database, MessageSquare, Save } from "lucide-react";
 export const navList = [
   {
     name: "SQL Generation",
-    path: "/",
+    path: "/chat",
     icon: <MessageSquare />,
   },
   {

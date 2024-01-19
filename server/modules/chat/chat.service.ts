@@ -10,6 +10,9 @@ export const getAllChats = async (userId: string) => {
       name: true,
       updatedAt: true,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 };
 
