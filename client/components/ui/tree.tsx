@@ -21,6 +21,7 @@ type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
   expandAll?: boolean;
   folderIcon?: LucideIcon;
   itemIcon?: LucideIcon;
+  selectedItemId?: string;
 };
 
 const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
@@ -33,17 +34,18 @@ const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
       folderIcon,
       itemIcon,
       className,
+      selectedItemId,
       ...props
     },
     ref,
   ) => {
-    const [selectedItemId, setSelectedItemId] = React.useState<
-      string | undefined
-    >(initialSlelectedItemId);
+    // const [selectedItemId, setSelectedItemId] = React.useState<
+    //   string | undefined
+    // >(initialSlelectedItemId);
 
     const handleSelectChange = React.useCallback(
       (item: TreeDataItem | undefined) => {
-        setSelectedItemId(item?.id);
+        // setSelectedItemId(item?.id);
         if (onSelectChange) {
           onSelectChange(item);
         }
