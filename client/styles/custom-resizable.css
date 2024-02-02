@@ -45,15 +45,50 @@
   transform: rotate(-90deg);
 }
 
-.react-grid-item > .react-resizable-handle.react-resizable-handle-se,
-.react-grid-item > .react-resizable-handle.react-resizable-handle-sw,
-.react-grid-item > .react-resizable-handle.react-resizable-handle-ne,
-.react-grid-item > .react-resizable-handle.react-resizable-handle-nw {
-  width: 30px;
-  height: 30px;
-  transform: rotate(0deg);
-  border: none;
+.react-grid-item > .react-resizable-handle.react-resizable-handle-se {
+  width: 20px;
+  height: 20px;
+  transform: rotate(270deg);
+  background: none;
+  border-radius: 0 0 0 1000px;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-top: none;
+  border-right: none;
 }
+
+.react-grid-item > .react-resizable-handle.react-resizable-handle-sw {
+  width: 20px;
+  height: 20px;
+  transform: rotate(90deg);
+  background: none;
+  border-radius: 0 0 1000px 0;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-top: none;
+  border-left: none;
+}
+
+.react-grid-item > .react-resizable-handle.react-resizable-handle-nw {
+  width: 20px;
+  height: 20px;
+  transform: rotate(-90deg);
+  background: none;
+  border-radius: 0 1000px 0 0;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-bottom: none;
+  border-left: none;
+}
+
+.react-grid-item > .react-resizable-handle.react-resizable-handle-ne {
+  width: 20px;
+  height: 20px;
+  transform: rotate(0deg);
+  background: none;
+  border-radius: 0 1000px 0 0;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-bottom: none;
+  border-left: none;
+}
+
 
 .react-grid-item > .react-resizable-handle {
   position: absolute;
