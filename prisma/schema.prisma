@@ -11,22 +11,36 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum Agent {
+enum AgentEnum {
   CHATBOT
   USER
+
+  @@map("agent_enum")
 }
 
-model Datasource {
+model Dashboard {
+  id        String      @id @default(uuid())
+  name      String
+  userId    String      @map("user_id")
+  parentId  String?     @map("parent_id")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  children  Dashboard[] @relation("ParentChild")
+  parent    Dashboard?  @relation("ParentChild", fields: [parentId], references: [id])
+  content   Json?
+
+  @@map("dashboard")
+}
+
+model Snippet {
   id        String   @id @default(uuid())
   name      String
-  engine    String
   userId    String   @map("user_id")
-  url       String
+  sql       String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([userId])
-  @@map("datasource")
+  @@map("snippet")
 }
 
 model Chat {
@@ -42,13 +56,13 @@ model Chat {
 }
 
 model Message {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   content   String
-  agent     Agent
-  chatId    String   @map("chat_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  chat      Chat     @relation(fields: [chatId], references: [id])
+  agent     AgentEnum
+  chatId    String    @map("chat_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  chat      Chat      @relation(fields: [chatId], references: [id])
 
   @@index([chatId])
   @@map("message")
