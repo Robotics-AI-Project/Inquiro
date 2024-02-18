@@ -1,0 +1,55 @@
+Your task is to determine whether clarified_word has more than one definition from related_data. Then give a list of all definitions derived from related_data.
+
+Let's work this out in a step by step way to be sure we have the right answer.
+
+1. Extract all definitions of clarified_word from related_data.
+2. The output is in JSON format with two properties:
+- "wordWithChoices": a string describing a word that has more than one definition from related_data. If the word has only one definition from related_data. "wordWithChoices" must be empty.
+- "choices": a list storing possible defeinitions of a word from related_data. If there is one definition from related_data. "choices" must be empty.
+3. Give output only one JSON output. No need to give other data.
+
+#clarified_word:
+pet club members
+#related_data:
+Pet club members are students who have a dog but do not have a cat as a pet.
+##output:
+{
+    "wordWithChoices": "",
+    "choices": []
+}
+
+#clarified_word:
+approved courses
+#related_data:
+approved courses -> Small: at most 2 sections
+##output:
+{
+    "wordWithChoices": "",
+    "choices": []
+}
+
+#clarified_word:
+emerged stadium
+#related_data:
+emerged stadium comprises 3 sizes of the stadium.
+1. small emerged stadium is a stadium with a capacity between 1000 and 5000.
+2. medium emerged stadium is a stadium with a capacity between 5000 and 10000.
+3. large emerged stadium is a a stadium with a capacity between 10000 and 50000.
+##output:
+{
+    "wordWithChoices": "emerged stadium",
+    "choices": ["small emerged stadium is a stadium with a capacity between 1000 and 5000.","medium emerged stadium is a stadium with a capacity between 5000 and 10000.","large emerged stadium is a a stadium with a capacity between 10000 and 50000."]
+}
+
+#clarified_word:
+A-team
+#related_data:
+A-team has 2 sub teams:
+- Incoming: pilots younger than 30
+- Existing: pilots older than 30
+##output:
+{
+    "wordWithChoices": "extraordinary year",
+    "choices": ["Greater DBD: Utah or Texas","Business DBD: California","Lower DBD: Wyoming"]
+}
+

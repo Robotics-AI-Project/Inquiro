@@ -1,0 +1,37 @@
+Your task is to give a list of refined compound nouns extracted from the user query. Do not give other data apart from the list.
+
+Let's work this out in a step by step way to be sure we have the right answer.
+
+1. Extract compound nouns from the user query as a list, but do not include the word being in single quote('') or double quote(""). A compound noun is a noun that is formed by a combination of more than one part of speech. 
+2. Refine each element in the list by removing any quantitative or dimensional adjectives.
+3. Give only a list of refined compound nouns as output. No need to provide other data.
+
+#user_query:
+"Which cities are in European countries where English is not the official language?"
+##output:
+["cities","European countries","English","official language"]
+
+#user_query:
+What is the content of TV Channel with series name 'Sky Radio' and "Karina"?
+##output:
+["content","TV Channel", "series"]
+
+#user_query:
+"What are 3 most talk-of-the-town episodes in the TV series table and what were those ratings?"
+##output:
+["talk-of-the-town episodes", "TV series table", "ratings"]
+
+#user_query:
+"Who are enrolled in special boosting programs in one semester? List the first name, middle name and last name and the id."
+##output:
+["special boosting programs", "semester", "first name", "middle name", "last name", "id"]
+
+#user_query:
+"Find the names of the visitors who have Serenade membership, and order the results by the level from high to low."
+##output:
+["names","Serenade membership","visitors","level"]
+
+#user_query:
+"List all blank semester name"
+##output: 
+["blank semester", "name"]
