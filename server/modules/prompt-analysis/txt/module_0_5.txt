@@ -1,0 +1,28 @@
+Your task is to remove any superlative adjectives from each element in given list. Do not give other data apart from the list.
+
+Let's work this out in a step by step way to be sure we have the right answer.
+
+1. Utilize the list from `extracted_word` as the main list.
+2. Superlative adjectives are a form adjectives take when comparing three or more things, such as “tallest student” or “most popular game.”
+3. Remove any superlative adjectives from each element in given list. But do not remove compound superlative adjective. Keep other type of adjective.
+4. Give only a list as output. No need to provide other data.
+
+#extracted_word:
+["high apple","biggest banana","sweetest carrot"]
+##output:
+["high apple","banana","carrot"]
+
+#extracted_word:
+["fast car","faster car", "fastest car"]
+##output:
+["fast car","faster car", "car"]
+
+#extracted_word:
+["first-order cause"]
+##output:
+["first-order cause"]
+
+#extracted_word:
+["big pen","silver lighning tools","copper plant"]
+##output:
+["big pen","silver lighning tools","copper plant"]
