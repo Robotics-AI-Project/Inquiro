@@ -7,7 +7,7 @@ export const promptAnalysisModule = basePrivateBackend.group(
   (app) =>
     app
       .post(
-        "/prompt-Analysis",
+        "",
         ({ body }) => {
           const { userQuery, userFeedback, schema } = body;
           // Call mainFlow function with the correct structure
