@@ -1,22 +1,8 @@
-"use client";
-
 import { cn } from "@/client/libs/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@client/components/ui/select";
-import {
-  llmOptionsList,
-  sqlGeneratorOptionsList,
-} from "@client/constants/options";
-import { useOptionStore } from "@client/stores/option.store";
+
 import { MessagesSquare } from "lucide-react";
 
 const Header = () => {
-  const { llm, setLLM, setSQLGenerator, sqlGenerator } = useOptionStore();
   return (
     <div
       className={cn(
@@ -29,7 +15,7 @@ const Header = () => {
         <MessagesSquare className="h-6 w-6" />
         <h1 className="text-xl font-semibold">Top 10 Movies in 2020</h1>
       </div>
-      <div className="flex space-x-4">
+      {/* <div className="flex space-x-4">
         <Select value={llm} onValueChange={setLLM}>
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="LLM" />
@@ -59,7 +45,7 @@ const Header = () => {
             ))}
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
     </div>
   );
 };

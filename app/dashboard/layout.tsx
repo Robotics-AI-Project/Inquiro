@@ -5,6 +5,7 @@ import { Button } from "@/client/components/ui/button";
 import { Input } from "@/client/components/ui/input";
 import { Separator } from "@/client/components/ui/separator";
 import { Tree, TreeDataItem } from "@/client/components/ui/tree";
+import { backendClient } from "@/client/libs/api";
 
 import { Plus, Search, Shield, Ticket } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -41,7 +42,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           <Input placeholder="Search dashboard" className="pr-8" />
           <Search
             size={18}
-            className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground"
+            className="text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 transform"
           />
         </div>
         <Button className="h-auto w-full justify-between px-3 py-[6px]">
@@ -49,7 +50,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           <Plus size={20} />
         </Button>
         <div className="space-y-2">
-          <p className="ml-2 text-sm text-muted-foreground">All Dashboards</p>
+          <p className="text-muted-foreground ml-2 text-sm">All Dashboards</p>
           <Separator />
           <Tree
             selectedItemId={dashboardId}

@@ -15,7 +15,9 @@ type Props = {
   };
 };
 
-const Page = (props: Props) => {
+const Page = ({ params: {
+  dashboardId
+} }: Props) => {
   const layout = [
     { i: "a", x: 0, y: 0, w: 4, h: 6, minW: 4, minH: 6 },
     { i: "b", x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 6 },

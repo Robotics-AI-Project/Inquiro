@@ -1,4 +1,4 @@
-import { BarChart3, Database, MessageSquare, Save } from "lucide-react";
+import { BarChart3, MessageSquare, Save } from "lucide-react";
 
 export const navList = [
   {
@@ -6,11 +6,11 @@ export const navList = [
     path: "/chat",
     icon: <MessageSquare />,
   },
-  {
-    name: "Datasource",
-    path: "/datasource",
-    icon: <Database />,
-  },
+  // {
+  //   name: "Datasource",
+  //   path: "/datasource",
+  //   icon: <Database />,
+  // },
   {
     name: "Dashboard",
     path: "/dashboard",
