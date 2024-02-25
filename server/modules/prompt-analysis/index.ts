@@ -1,18 +1,17 @@
 import { basePrivateBackend } from "@/server/setup";
 import { t } from "elysia";
-import { mainFlow } from "./main-flow";
-import optionHandler from "./option-handler";
+import { promptAnalysis } from "./prompt-analysys.service";
 
 export const promptAnalysisModule = basePrivateBackend.group(
   "/prompt-analysis",
   (app) =>
     app
       .post(
-        "/main-flow",
+        "/prompt-Analysis",
         ({ body }) => {
-          const { schema, userQuery, userFeedback } = body;
+          const { userQuery, userFeedback, schema } = body;
           // Call mainFlow function with the correct structure
-          return mainFlow({ body: { schema, userQuery, userFeedback } });
+          return promptAnalysis(userQuery, userFeedback, schema);
         },
         {
           // Define the request body schema using t.Object()
@@ -32,30 +31,4 @@ export const promptAnalysisModule = basePrivateBackend.group(
           },
         },
       )
-      .post(
-        "/option-handler",
-        ({ body }) => {
-          const { wordWithChoices, optionPicked } = body;
-          // Call optionHandler function with the correct structure
-          return optionHandler({ body: { wordWithChoices, optionPicked } });
-        },
-        {
-          // Define the request body schema for option-handler endpoint
-          body: t.Object({
-            wordWithChoices: t.String(),
-            optionPicked: t.String(),
-          }),
-          detail: {
-            tags: ["option-handler"],
-            description: "Handle user's option selection",
-            security: [
-              {
-                bearer: [],
-              },
-            ],
-          },
-        },
-      ),
 );
-
-export default promptAnalysisModule;
