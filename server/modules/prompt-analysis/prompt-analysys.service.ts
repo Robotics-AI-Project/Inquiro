@@ -1,8 +1,13 @@
-// Import necessary modules
 import { Pinecone } from "@pinecone-database/pinecone";
 import axios from "axios";
-import * as fs from "fs";
 import OpenAI from "openai";
+import {
+  module05Prompt,
+  module0Prompt,
+  module1Prompt,
+  module2Prompt,
+  module3Prompt,
+} from "./prompts";
 
 // it stays here
 // Initialize OpenAI
@@ -21,14 +26,6 @@ const ggAccessToken = "google-access-token";
 const headers = {
   Authorization: `Bearer ${ggAccessToken}`,
 };
-
-// File Path
-
-const module0Script = fs.readFileSync("./txt/module_0.txt", "utf8");
-const module0_5Script = fs.readFileSync("./txt/module_0_5.txt", "utf8");
-const module1Script = fs.readFileSync("./txt/module_1.txt", "utf8");
-const module2Script = fs.readFileSync("./txt/module_2.txt", "utf8");
-const module3Script = fs.readFileSync("./txt/module_3.txt", "utf8");
 
 // List of words to remove
 const wordsToRemove = ["max", "min", "average", "sum", "total", "distinct"];
@@ -144,7 +141,7 @@ const nounExtractor = async (userQuery: string) => {
 
   const completionResponse0 = await openai.chat.completions.create({
     messages: [
-      { role: "system", content: module0Script },
+      { role: "system", content: module0Prompt },
       { role: "user", content: `#user_query: "${userQuery}"` },
     ],
     model: "gpt-3.5-turbo-1106",
@@ -166,7 +163,7 @@ const nounExtractor = async (userQuery: string) => {
   // Module 0.5
   const completionResponse0_5 = await openai.chat.completions.create({
     messages: [
-      { role: "system", content: module0_5Script },
+      { role: "system", content: module05Prompt },
       { role: "user", content: extractedWordPrep },
     ],
     model: "gpt-3.5-turbo-1106",
@@ -193,7 +190,7 @@ const unknownWordRetreiver = async (
   // Module 1: Get Unknown word from schema
   const completionResponse1 = await openai.chat.completions.create({
     messages: [
-      { role: "system", content: module1Script },
+      { role: "system", content: module1Prompt },
       { role: "user", content: schema },
       { role: "user", content: extractedWord },
     ],
@@ -222,7 +219,7 @@ const unknownWordRetreiver = async (
       model: "gpt-3.5-turbo-1106",
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: module2Script },
+        { role: "system", content: module2Prompt },
         { role: "user", content: additionalDataPrompt },
         { role: "user", content: originalUnknownWordsFormattedPrompt },
       ],
@@ -268,7 +265,7 @@ const optionChecker = async (
       model: "gpt-3.5-turbo-1106",
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: module3Script },
+        { role: "system", content: module3Prompt },
         { role: "user", content: clarifiedWordPrep },
         { role: "user", content: relatedData },
       ],
