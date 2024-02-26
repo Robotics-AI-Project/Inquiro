@@ -4,6 +4,7 @@ import axios from "axios";
 import * as fs from "fs";
 import OpenAI from "openai";
 
+// it stays here
 // Initialize OpenAI
 const openai_apiKey = "openai-api-key";
 const openai = new OpenAI({ apiKey: openai_apiKey });
