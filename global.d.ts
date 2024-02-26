@@ -1,6 +1,6 @@
 // global.d.ts file
 
-// Issue caused by radix type mismatched with the current project's version
+// Issue caused by radix type mismatched with the current project's typescript version (^5)
 // Ref: https://github.com/radix-ui/primitives/issues/2309#issuecomment-1916541133
 
 import { PropsWithChildren } from "react";
