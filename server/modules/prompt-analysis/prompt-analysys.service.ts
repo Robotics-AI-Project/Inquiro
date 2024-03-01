@@ -111,7 +111,7 @@ const unknownWordRetreiver = async (
       list_unknown_2: string[];
     } = JSON.parse(responseModule2);
 
-    relatedData = `#related_data: ${jsonObject2.related_data}`;
+    relatedData = jsonObject2.related_data;
     listUnknown = jsonObject2.list_unknown_2;
 
     // Get Clarified words
@@ -152,8 +152,8 @@ const optionChecker = async (
     if (responseModule3 === null) throw new Error("optionChecker is invalid.");
 
     const {
-      options,
       wordWithOptions,
+      options,
     }: {
       wordWithOptions: string;
       options: string[];
@@ -206,7 +206,10 @@ export const promptAnalysis = async (
   );
 
   // Module 3: Check whether clarified word has options based on knowledge base.
-  const option = await optionChecker(clarifiedWord, relatedData);
+  const option = await optionChecker(
+    clarifiedWord,
+    `#related_data: ${relatedData}`,
+  );
 
   if (!option && unknownWord.length > 0) {
     const allUnknownWords = unknownWord
@@ -221,9 +224,8 @@ export const promptAnalysis = async (
     };
   }
 
-  const { wordWithOptions, options } = option!;
-
-  if (options.length > 0) {
+  if (option) {
+    const { wordWithOptions, options } = option;
     const formattedOptionsString = options
       .map((option, index) => `${index + 1}. ${option}`)
       .join("\n");

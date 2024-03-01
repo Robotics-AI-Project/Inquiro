@@ -232,8 +232,8 @@ Let's work this out in a step by step way to be sure we have the right answer.
 
 1. Extract all definitions of clarified_word from related_data.
 2. The output is in JSON format with two properties:
-- "wordWithChoices": a string describing a word that has more than one definition from related_data. If the word has only one definition from related_data. "wordWithChoices" must be empty.
-- "choices": a list storing possible defeinitions of a word from related_data. If there is one definition from related_data. "choices" must be empty.
+- "wordWithOptions": a string describing a word that has more than one definition from related_data. If the word has only one definition from related_data. "wordWithOptions" must be empty.
+- "options": a list storing possible defeinitions of a word from related_data. If there is one definition from related_data. "options" must be empty.
 3. Give output only one JSON output. No need to give other data.
 
 #clarified_word:
@@ -242,8 +242,8 @@ pet club members
 Pet club members are students who have a dog but do not have a cat as a pet.
 ##output:
 {
-    "wordWithChoices": "",
-    "choices": []
+    "wordWithOptions": "",
+    "options": []
 }
 
 #clarified_word:
@@ -252,8 +252,8 @@ approved courses
 approved courses -> Small: at most 2 sections
 ##output:
 {
-    "wordWithChoices": "",
-    "choices": []
+    "wordWithOptions": "",
+    "options": []
 }
 
 #clarified_word:
@@ -265,8 +265,8 @@ emerged stadium comprises 3 sizes of the stadium.
 3. large emerged stadium is a a stadium with a capacity between 10000 and 50000.
 ##output:
 {
-    "wordWithChoices": "emerged stadium",
-    "choices": ["small emerged stadium is a stadium with a capacity between 1000 and 5000.","medium emerged stadium is a stadium with a capacity between 5000 and 10000.","large emerged stadium is a a stadium with a capacity between 10000 and 50000."]
+    "wordWithOptions": "emerged stadium",
+    "options": ["small emerged stadium is a stadium with a capacity between 1000 and 5000.","medium emerged stadium is a stadium with a capacity between 5000 and 10000.","large emerged stadium is a a stadium with a capacity between 10000 and 50000."]
 }
 
 #clarified_word:
@@ -277,6 +277,6 @@ A-team has 2 sub teams:
 - Existing: pilots older than 30
 ##output:
 {
-    "wordWithChoices": "extraordinary year",
-    "choices": ["Greater DBD: Utah or Texas","Business DBD: California","Lower DBD: Wyoming"]
+    "wordWithOptions": "extraordinary year",
+    "options": ["Greater DBD: Utah or Texas","Business DBD: California","Lower DBD: Wyoming"]
 }`;
