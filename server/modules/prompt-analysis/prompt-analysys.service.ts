@@ -1,6 +1,6 @@
-import { Pinecone } from "@pinecone-database/pinecone";
-import axios from "axios";
-import OpenAI from "openai";
+// Import necessary modules
+import { getKnowledgeBase, removeWords } from "./helpers";
+import { openai } from "./initialization";
 import {
   module05Prompt,
   module0Prompt,
@@ -9,136 +9,12 @@ import {
   module3Prompt,
 } from "./prompts";
 
-// it stays here
-// Initialize OpenAI
-const openai_apiKey = "openai-api-key";
-const openai = new OpenAI({ apiKey: openai_apiKey });
-
-// Initialize Pinecone
-const pinecone_apiKey = "pinecone-api-key";
-const pinecone = new Pinecone({ apiKey: pinecone_apiKey });
-const indexName = "knowledgebase";
-const pineconeIndex = pinecone.index(indexName);
-
-const ggAccessToken = "google-access-token";
-
-// Set up the authorization header
-const headers = {
-  Authorization: `Bearer ${ggAccessToken}`,
-};
-
-// List of words to remove
-const wordsToRemove = ["max", "min", "average", "sum", "total", "distinct"];
-
-// Function to remove specified words from each element in the array
-function removeWords(arr: string[], wordsToRemove: string[]): string[] {
-  return arr.map((word) => {
-    // Split the word into individual words
-    const splitWords = word.split(" ");
-    // Remove specified words
-    const filteredWords = splitWords.filter(
-      (w) => !wordsToRemove.includes(w.toLowerCase()),
-    );
-    // Join the remaining words back together
-    return filteredWords.join(" ");
-  });
-}
-
-// Concat data from Google Docs Link
-function concatenateText(contentData: any): string {
-  let concatenatedString = "";
-
-  contentData?.forEach((item: any) => {
-    if (item?.paragraph && item.paragraph?.elements) {
-      if (item?.paragraph?.bullet && item?.paragraph?.bullet?.listId) {
-        concatenatedString += `• `; // Add bullet point
-      }
-
-      item.paragraph.elements.forEach((element: any) => {
-        if (element?.textRun && element.textRun?.content) {
-          concatenatedString += element.textRun.content;
-        }
-      });
-    }
-  });
-
-  return concatenatedString;
-}
-
-//wait function
-function waitNSecond(sec: number) {
-  const time = sec * 1000;
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, time); // 1000 milliseconds = 1 second
-  });
-}
-
-// Make a GET request to the Google Drive API
-const getDocFile = async (documentId: string) => {
-  try {
-    const response = await axios.get(
-      `https://docs.googleapis.com/v1/documents/${documentId}`,
-      {
-        headers: headers,
-      },
-    );
-    const docs = concatenateText(response.data.body.content);
-    const title = response.data.title;
-    return { docs, title };
-  } catch (error: any) {
-    console.error("Error getting docs files:", error.message);
-  }
-};
-
-const getKnowledgeBase = async (userQuery: string) => {
-  // Embed user query
-  const userQueryResponse = await openai.embeddings.create({
-    model: "text-embedding-ada-002",
-    input: userQuery,
-  });
-  const userQueryEmbedded: number[] = userQueryResponse.data[0].embedding;
-  if (userQueryEmbedded == null) {
-    throw new Error("Error embedding user query");
-  }
-  let similarArticlesAll = "";
-  while (true) {
-    try {
-      const result = await pineconeIndex.query({
-        topK: 3,
-        vector: userQueryEmbedded,
-        includeMetadata: true,
-      });
-      // IDs of the 3 most similar articles
-      const similarArticleUrl = result.matches.map(
-        (match: any) => match.metadata,
-      );
-      let doc, docID;
-      for (const article of similarArticleUrl) {
-        docID = article.url.split("/d/")[1];
-        doc = await getDocFile(docID);
-        await waitNSecond(0.5);
-        similarArticlesAll = similarArticlesAll + doc;
-      }
-      return similarArticlesAll;
-      // Fetch the similar article
-    } catch (error) {
-      // Handle the error
-      console.error(
-        "An error occurred while querying the Pinecone index:",
-        error,
-      );
-      await waitNSecond(1); // Wait for 1 second before retrying
-    }
-  }
-};
+// All initializations of OpenAI, Pinecone, and Google move to initialization.ts
 
 // Module 0: Noun Extractor
 // Function: Get extracted noun from user query
 const nounExtractor = async (userQuery: string) => {
   // Module 0: Extract compound noun
-
   const completionResponse0 = await openai.chat.completions.create({
     messages: [
       { role: "system", content: module0Prompt },
@@ -157,7 +33,6 @@ const nounExtractor = async (userQuery: string) => {
   // Remove specified words from the original list
   let extractedWordPrep = `#extracted_word: ${removeWords(
     JSON.parse(responseModule0),
-    wordsToRemove,
   )}`;
 
   // Module 0.5
@@ -236,7 +111,7 @@ const unknownWordRetreiver = async (
       list_unknown_2: string[];
     } = JSON.parse(responseModule2);
 
-    relatedData = `#related_data: ${jsonObject2.related_data}`;
+    relatedData = jsonObject2.related_data;
     listUnknown = jsonObject2.list_unknown_2;
 
     // Get Clarified words
@@ -260,7 +135,6 @@ const optionChecker = async (
   for (const word of clarifiedWordArray) {
     // module 3: get word that have choice
     const clarifiedWordPrep = `#clarified_word: ${word}`;
-    console.log(clarifiedWordPrep);
     const completionResponse3 = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-1106",
       response_format: { type: "json_object" },
@@ -278,8 +152,8 @@ const optionChecker = async (
     if (responseModule3 === null) throw new Error("optionChecker is invalid.");
 
     const {
-      options,
       wordWithOptions,
+      options,
     }: {
       wordWithOptions: string;
       options: string[];
@@ -332,14 +206,17 @@ export const promptAnalysis = async (
   );
 
   // Module 3: Check whether clarified word has options based on knowledge base.
-  const option = await optionChecker(clarifiedWord, relatedData);
+  const option = await optionChecker(
+    clarifiedWord,
+    `#related_data: ${relatedData}`,
+  );
 
   if (!option && unknownWord.length > 0) {
     const allUnknownWords = unknownWord
       .map((word, index) => `${index + 1}. ${word}`)
       .join("\n");
     const output = `Please clarify the meaning of these words:\n${allUnknownWords}`;
-    // Case 3 Output: If unclear word with no option exists
+    // Case 2 Output: If unclear word with no option exists
     return {
       isCompleted: false,
       feedbackMode: "manual",
@@ -347,9 +224,8 @@ export const promptAnalysis = async (
     };
   }
 
-  const { wordWithOptions, options } = option!;
-
-  if (options.length > 0) {
+  if (option) {
+    const { wordWithOptions, options } = option;
     const formattedOptionsString = options
       .map((option, index) => `${index + 1}. ${option}`)
       .join("\n");
@@ -357,7 +233,7 @@ export const promptAnalysis = async (
 Do you mean by one of these options? Please select an option.
 ${formattedOptionsString}
 option?:`;
-    // Case 2 Output: having option avaliable
+    // Case 3 Output: having option avaliable
     return {
       isCompleted: false,
       feedbackMode: "option",
@@ -367,12 +243,9 @@ option?:`;
     };
   }
 
-  // Unknown word/words exist
-
   // isComplete = False -> reply to user
   // isComplete = True -> send to text-to-sql module
   // hasOption = True >> call optionHandler and wait for user feedback.
-
   return {
     isCompleted: true,
     output: `${userQuery} ${relatedData}`,

@@ -41,7 +41,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           <Input placeholder="Search dashboard" className="pr-8" />
           <Search
             size={18}
-            className="text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 transform"
+            className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground"
           />
         </div>
         <Button className="h-auto w-full justify-between px-3 py-[6px]">
@@ -49,7 +49,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           <Plus size={20} />
         </Button>
         <div className="space-y-2">
-          <p className="text-muted-foreground ml-2 text-sm">All Dashboards</p>
+          <p className="ml-2 text-sm text-muted-foreground">All Dashboards</p>
           <Separator />
           <Tree
             selectedItemId={dashboardId}

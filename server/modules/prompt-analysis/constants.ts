@@ -1,2 +1,2 @@
-// constants for prompt analysis module
-// const EXAMPLE_CONSTANT = "example";
+// Initialize Pinecone
+export const PINECONE_INDEX_NAME = "knowledgebase";

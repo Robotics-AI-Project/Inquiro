@@ -40,7 +40,7 @@ const Page = () => {
   };
   return (
     <div className="flex h-full">
-      <Toolbar className="w-[448px] space-y-4">
+      <Toolbar className="w-[400px] space-y-4">
         <div className="relative">
           <Input placeholder="Search Snippet" className="pr-8" />
           <Search
