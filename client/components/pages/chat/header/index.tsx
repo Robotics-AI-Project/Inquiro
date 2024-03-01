@@ -1,8 +1,13 @@
 import { cn } from "@/client/libs/utils";
 
 import { MessagesSquare } from "lucide-react";
+import { HeaderTitle } from "./header-title";
 
-const Header = () => {
+type Props = {
+  chatId?: string;
+};
+
+const Header = async ({ chatId }: Props) => {
   return (
     <div
       className={cn(
@@ -13,7 +18,7 @@ const Header = () => {
     >
       <div className="flex items-center space-x-2">
         <MessagesSquare className="h-6 w-6" />
-        <h1 className="text-xl font-semibold">Top 10 Movies in 2020</h1>
+        <HeaderTitle chatId={chatId} />
       </div>
       {/* <div className="flex space-x-4">
         <Select value={llm} onValueChange={setLLM}>

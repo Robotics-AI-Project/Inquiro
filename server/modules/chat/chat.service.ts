@@ -16,6 +16,22 @@ export const getAllChats = async (userId: string) => {
   });
 };
 
+export const getChatById = async (userId: string, chatId: string) => {
+  console.log("userId", userId);
+  console.log("chatId", chatId);
+  return await metadataDb.chat.findFirst({
+    where: {
+      id: chatId,
+      userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      updatedAt: true,
+    },
+  });
+};
+
 export const updateChatById = async (
   chatId: string,
   data: {

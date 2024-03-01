@@ -8,7 +8,7 @@ import { useState } from "react";
 const MessageInput = () => {
   const [prompt, setPrompt] = useState("");
   return (
-    <section className="flex h-24 w-full flex-col items-center">
+    <section className="flex h-24 w-full flex-col items-center gap-1">
       <div className="relative">
         <Textarea
           value={prompt}
@@ -25,6 +25,10 @@ const MessageInput = () => {
           <ArrowUp size={20} />
         </Button>
       </div>
+      <p className="text-center text-sm text-gray-400">
+        Text-To-SQL Query Generation and Data Visualization using Large Language
+        Model
+      </p>
     </section>
   );
 };

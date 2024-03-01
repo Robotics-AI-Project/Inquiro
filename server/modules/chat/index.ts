@@ -4,6 +4,7 @@ import {
   createChat,
   deleteChatById,
   getAllChats,
+  getChatById,
   updateChatById,
 } from "./chat.service";
 
@@ -122,5 +123,20 @@ export const chatModule = basePrivateBackend.group("/chat", (app) =>
           },
         ],
       },
-    }),
+    })
+    .get(
+      "/:chatId",
+      ({ params, clerk }) => getChatById(clerk.id, params.chatId),
+      {
+        detail: {
+          tags: ["chat"],
+          description: "Update chat by id",
+          security: [
+            {
+              bearer: [],
+            },
+          ],
+        },
+      },
+    ),
 );

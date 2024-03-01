@@ -5,7 +5,6 @@ import { Button } from "@/client/components/ui/button";
 import { Input } from "@/client/components/ui/input";
 import { Separator } from "@/client/components/ui/separator";
 import { Tree, TreeDataItem } from "@/client/components/ui/tree";
-import { backendClient } from "@/client/libs/api";
 
 import { Plus, Search, Shield, Ticket } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";

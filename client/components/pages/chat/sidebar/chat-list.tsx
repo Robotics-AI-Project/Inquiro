@@ -1,5 +1,6 @@
 "use client";
 
+import { useChatList, useDeleteChat } from "@/client/hooks/chat";
 import { cn } from "@/client/libs/utils";
 import { Button } from "@client/components/ui/button";
 import {
@@ -9,33 +10,24 @@ import {
   DropdownMenuTrigger,
 } from "@client/components/ui/dropdown-menu";
 import { Skeleton } from "@client/components/ui/skeleton";
-import { backendClient } from "@client/libs/api";
-import { useQuery } from "@tanstack/react-query";
 import { Loader2, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 const ChatList = () => {
   const { chatId } = useParams<{ chatId?: string }>();
   const router = useRouter();
-  const { data, error, isFetching } = useQuery({
-    queryKey: ["chat"],
-    queryFn: async () => {
-      const { data, error } = await backendClient.api.chat.get();
-      if (error) throw new Error(error.name);
-      return data;
-    },
-  });
+  const { data, error, isLoading, isError } = useChatList();
+  const { deleteChat } = useDeleteChat();
 
-  if (isFetching) return <ChatSkeleton />;
-  if (error) {
+  if (isLoading) return <ChatSkeleton />;
+  if (isError) {
     return (
       <div className="flex h-40 flex-col items-center justify-center space-y-2 rounded-xl bg-red-500 text-sm text-white">
         <p>Failed to fetch chat data</p>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
       </div>
     );
   }
-
-  console.log(data);
 
   const groupedData =
     data
@@ -49,8 +41,6 @@ const ChatList = () => {
           const updatedAt = new Date(chat.updatedAt);
           const diffTime = Math.abs(today.getTime() - updatedAt.getTime());
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-          console.log(diffDays);
 
           const key =
             diffDays <= 1 ? "Today" : diffDays <= 7 ? "7 days ago" : "Others";
@@ -80,7 +70,9 @@ const ChatList = () => {
                 "h-auto w-auto justify-start gap-2 px-3 py-[6px]",
                 !isSelected && "font-normal",
               )}
-              onClick={() => router.push(`/chat/${chat.id}`)}
+              onClick={() => {
+                if (!isSelected) router.push(`/chat/${chat.id}`);
+              }}
               disabled={chat.id === "OPTIMISTIC"}
             >
               {chat.id === "OPTIMISTIC" && <Loader2 className="animate-spin" />}
@@ -105,7 +97,14 @@ const ChatList = () => {
                         <p>Rename</p>
                       </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="rounded-md text-red-500 focus:bg-red-200 focus:text-red-600">
+                    <DropdownMenuItem
+                      className="rounded-md text-red-500 focus:bg-red-200 focus:text-red-600"
+                      key={`dropdown-delete-${chat.id}`}
+                      onClick={async () => {
+                        router.push(`/chat`);
+                        deleteChat(chat.id);
+                      }}
+                    >
                       <div className="flex items-center space-x-2">
                         <Trash size={18} />
                         <p>Delete chat</p>
