@@ -7,25 +7,25 @@ import Image from "next/image";
 import { PropsWithChildren, useMemo } from "react";
 
 type Props = {
-  agent: "user" | "bot";
+  agent: "USER" | "CHATBOT";
 } & PropsWithChildren;
 
-const Message = ({ agent, children }: Props) => {
+const MessageItem = ({ agent, children }: Props) => {
   const { user, isLoaded } = useUser();
 
   const imageUrl = useMemo(() => {
-    if (agent === "bot") return "/assets/inquiro-profile.svg";
+    if (agent === "CHATBOT") return "/assets/inquiro-profile.svg";
     return user?.imageUrl ?? "/assets/user-profile.png";
   }, [agent, user?.imageUrl]);
   return (
     <div
       className={cn("flex items-start justify-center gap-4 py-7", {
-        "bg-[#F9F9F9]": agent === "bot",
-        "bg-white": agent === "user",
+        "bg-[#F9F9F9]": agent === "CHATBOT",
+        "bg-white": agent === "USER",
       })}
     >
       <div className="relative h-6 w-6 overflow-hidden rounded-full">
-        {agent === "user" && !isLoaded ? (
+        {agent === "USER" && !isLoaded ? (
           <Skeleton className="h-full w-full" />
         ) : (
           <Image src={imageUrl} fill alt="profile-image" />
@@ -33,7 +33,7 @@ const Message = ({ agent, children }: Props) => {
       </div>
       <div className="w-[800px]">
         <h2 className="font-semibold">
-          {agent === "user" ? "You" : "Inquiro"}
+          {agent === "USER" ? "You" : "Inquiro"}
         </h2>
         <div className="w-full space-y-4">{children}</div>
       </div>
@@ -41,4 +41,4 @@ const Message = ({ agent, children }: Props) => {
   );
 };
 
-export default Message;
+export default MessageItem;
