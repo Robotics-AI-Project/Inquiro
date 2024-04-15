@@ -1,8 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Pool } from "pg";
+import Database from "better-sqlite3";
 
+export const enterpriseDb = new Database("db.sqlite", { readonly: true });
 export const metadataDb = new PrismaClient();
-
-export const enterpriseDb = new Pool({
-  connectionString: process.env.ENTERPRISE_DATABASE_URL,
-});
