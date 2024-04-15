@@ -1,6 +1,22 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { backendClient } from "../libs/api";
-import { revalidatePath } from "next/cache";
+
+export const useGetMessages = (chatId: string) => {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["chat", chatId],
+    queryFn: async () => {
+      const { data, error } = await backendClient.api.message[chatId].get();
+      if (error) throw new Error(error.name);
+      return data;
+    },
+  });
+
+  return {
+    messages: data,
+    error,
+    isLoading,
+  };
+};
 
 export const useCreateMessage = (chatId: string) => {
   const { mutateAsync, isPending } = useMutation({
@@ -11,9 +27,6 @@ export const useCreateMessage = (chatId: string) => {
       });
       if (error) throw new Error(error.name);
       return data;
-    },
-    onSuccess: () => {
-      revalidatePath(`/chat/${chatId}`);
     },
   });
 

@@ -5,8 +5,18 @@ import { Textarea } from "@client/components/ui/textarea";
 import { ArrowUp } from "lucide-react";
 import { useState } from "react";
 
-const MessageInput = () => {
+type Props = {
+  onMessage?: (prompt: string) => Promise<void>;
+};
+
+const MessageInput = ({ onMessage }: Props) => {
   const [prompt, setPrompt] = useState("");
+
+  const handleMessage = async () => {
+    setPrompt("");
+    if (onMessage) await onMessage(prompt);
+  };
+
   return (
     <section className="flex h-24 w-full flex-col items-center gap-1">
       <div className="relative">
@@ -21,6 +31,7 @@ const MessageInput = () => {
           className="w-autp absolute right-4 top-4 h-auto p-[6px] transition-all duration-150"
           variant="secondary"
           disabled={!prompt}
+          onClick={handleMessage}
         >
           <ArrowUp size={20} />
         </Button>

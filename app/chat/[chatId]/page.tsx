@@ -1,16 +1,8 @@
-import EmptyDisplay from "@/client/components/empty-display";
-import { getAllMessages } from "@/server/modules/message/message.service";
+"use client";
+import MessageSkeleton from "@/client/components/pages/chat/message/skeleton";
+import { useGetMessages } from "@/client/hooks/message";
 import Message from "@client/components/pages/chat/message";
-import Visualization from "@client/components/pages/chat/visualization";
 import { ScrollArea } from "@client/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@client/components/ui/select";
-import { setTimeout } from "timers/promises";
 
 type Props = {
   params: {
@@ -18,9 +10,24 @@ type Props = {
   };
 };
 
-const Page = async ({ params: { chatId } }: Props) => {
-  const messages = await getAllMessages(chatId);
-  console.log("messages", messages);
+const Page = ({ params: { chatId } }: Props) => {
+  const { error, isLoading, messages = [] } = useGetMessages(chatId);
+
+  if (isLoading)
+    return (
+      <div>
+        <div className="mx-auto h-[calc(100vh-60px-6rem)] w-[800px]">
+          <div className="h-[72px]" />
+          <div className="space-y-14">
+            <MessageSkeleton />
+            <MessageSkeleton />
+            <MessageSkeleton />
+          </div>
+        </div>
+      </div>
+    );
+  if (error) return <div>Error {JSON.stringify(error)}</div>;
+
   return (
     <ScrollArea className="h-[calc(100vh-60px-6rem)]">
       <div className="h-[72px]" />
