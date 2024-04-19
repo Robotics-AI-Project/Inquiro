@@ -13,11 +13,16 @@ type Props = {
 
 const Layout = ({ params: { chatId }, children }: Props) => {
   const { createMessage } = useCreateMessage(chatId);
+  const onMessage = async (prompt: string) => {
+    await createMessage({
+      content: prompt,
+    });
+  };
   return (
     <main className="relative flex w-full flex-col overflow-scroll">
       {children}
       <Header chatId={chatId} />
-      <MessageInput />
+      <MessageInput onMessage={onMessage} />
     </main>
   );
 };

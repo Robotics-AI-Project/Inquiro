@@ -251,10 +251,14 @@ export const backendApp = intializeBaseBackend()
           })
           .post(
             "/:chatId",
-            ({ params, body }) => createMessage(params.chatId, body.content),
+            ({ params, body }) =>
+              createMessage(params.chatId, body.content, body.agent),
             {
               body: t.Object({
                 content: t.String(),
+                agent: t.Optional(
+                  t.Union([t.Literal("CHATBOT"), t.Literal("USER")]),
+                ),
               }),
               detail: {
                 tags: ["message"],
