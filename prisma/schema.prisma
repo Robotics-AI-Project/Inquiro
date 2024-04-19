@@ -18,6 +18,20 @@ enum AgentEnum {
   @@map("agent_enum")
 }
 
+enum ClarificationEnum {
+  MANUAL
+  OPTION
+
+  @@map("clarification_enum")
+}
+
+enum MessageEnum {
+  TEXT
+  SQL
+
+  @@map("message_enum")
+}
+
 model Dashboard {
   id        String      @id @default(uuid())
   name      String
@@ -43,6 +57,18 @@ model Snippet {
   @@map("snippet")
 }
 
+model PromptClarification {
+  id                String            @id @default(uuid())
+  messageId         String?           @unique @map("message_id")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  clarificationType ClarificationEnum @map("clarification_type")
+  options           Json?
+  Message           Message?
+
+  @@map("prompt_clarification")
+}
+
 model Chat {
   id        String    @id @default(uuid())
   name      String
@@ -56,13 +82,16 @@ model Chat {
 }
 
 model Message {
-  id        String    @id @default(uuid())
-  content   String
-  agent     AgentEnum
-  chatId    String    @map("chat_id")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  chat      Chat      @relation(fields: [chatId], references: [id])
+  id                  String               @id @default(uuid())
+  content             String
+  agent               AgentEnum
+  chatId              String               @map("chat_id")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  chat                Chat                 @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  messageType         MessageEnum          @default(TEXT) @map("message_type")
+  clarificationId     String?              @unique @map("clarification_id")
+  promptClarification PromptClarification? @relation(fields: [clarificationId], references: [id])
 
   @@index([chatId])
   @@map("message")
