@@ -1,5 +1,6 @@
 "use client";
 
+import SQL from "@/client/components/sql";
 import { Message } from "@/types/message";
 import { useEffect, useRef } from "react";
 import MessageItem from ".";
@@ -17,7 +18,11 @@ const MessageList = ({ messages }: Props) => {
     <>
       {messages.map((message) => (
         <MessageItem key={message.id} agent={message.agent}>
-          {message.content}
+          {message.messageType === "SQL" ? (
+            <SQL sql={message.content} />
+          ) : (
+            message.content
+          )}
         </MessageItem>
       ))}
       <div ref={endOfChatRef} />

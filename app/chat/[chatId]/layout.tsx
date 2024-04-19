@@ -2,7 +2,7 @@
 
 import Header from "@/client/components/pages/chat/header";
 import MessageInput from "@/client/components/pages/chat/message-input";
-import { useCreateMessage } from "@/client/hooks/message";
+import { useCreateMessage, useGetMessages } from "@/client/hooks/message";
 import { PropsWithChildren } from "react";
 
 type Props = {
@@ -12,10 +12,21 @@ type Props = {
 } & PropsWithChildren;
 
 const Layout = ({ params: { chatId }, children }: Props) => {
+  const { messageStatus, messages } = useGetMessages(chatId);
   const { createMessage } = useCreateMessage(chatId);
+  const userMessages = messages.filter((message) => message.agent === "USER");
+
   const onMessage = async (prompt: string) => {
+    if (userMessages.length === 0) {
+      await createMessage({ userQuery: prompt, userFeedback: "" });
+      return;
+    }
     await createMessage({
-      content: prompt,
+      userQuery:
+        messageStatus === "PROMPT"
+          ? prompt
+          : userMessages[userMessages.length - 1].content,
+      userFeedback: messageStatus === "CLARIFICATION" ? prompt : "",
     });
   };
   return (

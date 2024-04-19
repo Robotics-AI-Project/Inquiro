@@ -8,6 +8,7 @@ import {
   module2Prompt,
   module3Prompt,
 } from "./prompts";
+import { getSchemaInformation } from "./utils/db";
 
 // All initializations of OpenAI, Pinecone, and Google move to initialization.ts
 
@@ -55,12 +56,15 @@ const unknownWordRetreiver = async (
   userQuery: string,
   extractedWord: string,
   userFeedback: string,
-  schema: string,
 ) => {
   // Initialize output
   let clarifiedWordArray: string[] = [];
   let listUnknown: string[] = [];
   let relatedData = "";
+
+  const schema = getSchemaInformation();
+
+  console.log("schema", schema);
 
   // Module 1: Get Unknown word from schema
   const completionResponse1 = await openai.chat.completions.create({
@@ -172,7 +176,6 @@ const optionChecker = async (
 export const promptAnalysis = async (
   userQuery: string,
   userFeedback: string,
-  schema: string,
 ): Promise<
   { output: string } & (
     | {
@@ -198,12 +201,7 @@ export const promptAnalysis = async (
     listUnknown: unknownWord,
     clarifiedWordArray: clarifiedWord,
     relatedData,
-  } = await unknownWordRetreiver(
-    userQuery,
-    extractedWord,
-    userFeedback,
-    schema,
-  );
+  } = await unknownWordRetreiver(userQuery, extractedWord, userFeedback);
 
   // Module 3: Check whether clarified word has options based on knowledge base.
   const option = await optionChecker(

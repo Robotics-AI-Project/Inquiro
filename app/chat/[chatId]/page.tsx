@@ -1,4 +1,5 @@
 "use client";
+import MessageList from "@/client/components/pages/chat/message/message-list";
 import MessageSkeleton from "@/client/components/pages/chat/message/skeleton";
 import { useGetMessages } from "@/client/hooks/message";
 import Message from "@client/components/pages/chat/message";
@@ -31,11 +32,7 @@ const Page = ({ params: { chatId } }: Props) => {
   return (
     <ScrollArea className="h-[calc(100vh-60px-6rem)]">
       <div className="h-[72px]" />
-      {messages.map((message) => (
-        <Message key={message.id} agent={message.agent}>
-          {message.content}
-        </Message>
-      ))}
+      <MessageList messages={messages} />
     </ScrollArea>
   );
 };

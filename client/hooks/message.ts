@@ -11,8 +11,18 @@ export const useGetMessages = (chatId: string) => {
     },
   });
 
+  if (!data || data.length === 0) return { messages: [], error, isLoading };
+
+  const messageStatus =
+    data[data.length - 1].messageType === "TEXT"
+      ? data[data.length - 1].clarificationId
+        ? "CLARIFICATION"
+        : "PROMPT"
+      : "PROMPT";
+
   return {
     messages: data,
+    messageStatus,
     error,
     isLoading,
   };
@@ -20,24 +30,26 @@ export const useGetMessages = (chatId: string) => {
 
 export const useCreateMessage = (chatId: string) => {
   const queryClient = useQueryClient();
+
   const { mutateAsync, isPending } = useMutation({
     // Optimistic Update
     mutationKey: ["create-message", chatId],
     mutationFn: async ({
-      content,
-      agent = "USER",
+      userFeedback,
+      userQuery,
     }: {
-      content: string;
-      agent?: "USER" | "CHATBOT";
+      userQuery: string;
+      userFeedback: string;
     }) => {
-      const { data, error } = await backendClient.api.message[chatId].post({
-        content,
-        agent,
+      const { data, error } = await backendClient.api["prompt-analysis"].post({
+        chatId: chatId,
+        userQuery,
+        userFeedback,
       });
       if (error) throw new Error(error.name);
       return data;
     },
-    onMutate: async ({ content, agent = "USER" }) => {
+    onMutate: async ({ userQuery, userFeedback }) => {
       await queryClient.cancelQueries({ queryKey: ["chat", chatId] });
 
       const previousChatMessages =
@@ -58,12 +70,20 @@ export const useCreateMessage = (chatId: string) => {
         [
           ...previousChatMessages,
           {
-            content,
-            agent,
+            content: !userFeedback ? userQuery : userFeedback,
+            agent: "USER",
             chatId,
             createdAt: new Date(),
             updatedAt: new Date(),
             id: "temp-id",
+          },
+          {
+            content: "",
+            agent: "CHATBOT",
+            chatId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            id: "temp-id-bot",
           },
         ],
       );
@@ -73,6 +93,11 @@ export const useCreateMessage = (chatId: string) => {
 
     onError: (_error, _data, context) => {
       queryClient.setQueryData(["chat", chatId], context?.previousChatMessages);
+    },
+    onSuccess: (data, _variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["chat", chatId],
+      });
     },
   });
 

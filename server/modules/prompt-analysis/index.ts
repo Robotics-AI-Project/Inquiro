@@ -8,16 +8,15 @@ export const promptAnalysisModule = basePrivateBackend.group(
     app.post(
       "",
       ({ body }) => {
-        const { userQuery, userFeedback, schema } = body;
+        const { userQuery, userFeedback } = body;
         // call main flow function with the correct structure
-        return promptAnalysis(userQuery, userFeedback, schema);
+        return promptAnalysis(userQuery, userFeedback);
       },
       {
         // Define the request body schema using t.Object()
         body: t.Object({
           userQuery: t.String(),
           userFeedback: t.String(),
-          schema: t.String(),
         }),
         detail: {
           tags: ["prompt-analysis"],

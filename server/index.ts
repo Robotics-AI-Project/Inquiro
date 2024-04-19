@@ -23,6 +23,7 @@ import {
 import { promptAnalysis } from "./modules/prompt-analysis/prompt-analysys.service";
 
 import { t } from "elysia";
+import { metadataDb } from "./configs/db";
 import { c3Sql } from "./modules/sql-generation/c3-sql";
 
 export const backendApp = intializeBaseBackend()
@@ -275,17 +276,73 @@ export const backendApp = intializeBaseBackend()
       .group("/prompt-analysis", (app) =>
         app.post(
           "",
-          ({ body }) => {
-            const { userQuery, userFeedback, schema } = body;
+          async ({ body }) => {
+            const { userQuery, userFeedback, chatId } = body;
+            await metadataDb.message.create({
+              data: {
+                content: !userFeedback ? userQuery : userFeedback,
+                chatId,
+                agent: "USER",
+              },
+            });
             // call main flow function with the correct structure
-            return promptAnalysis(userQuery, userFeedback, schema);
+            const result = await promptAnalysis(userQuery, userFeedback);
+            if (!result.isCompleted) {
+              switch (result.feedbackMode) {
+                case "manual": {
+                  return metadataDb.$transaction(async (tx) => {
+                    const clarification = await tx.promptClarification.create({
+                      data: {
+                        clarificationType: "MANUAL",
+                      },
+                    });
+                    return tx.message.create({
+                      data: {
+                        content: result.output,
+                        chatId,
+                        clarificationId: clarification.id,
+                        agent: "CHATBOT",
+                      },
+                    });
+                  });
+                }
+                case "option": {
+                  return metadataDb.$transaction(async (tx) => {
+                    const clarification = await tx.promptClarification.create({
+                      data: {
+                        clarificationType: "OPTION",
+                        options: result.options,
+                      },
+                    });
+                    return tx.message.create({
+                      data: {
+                        content: result.output,
+                        chatId,
+                        clarificationId: clarification.id,
+                        agent: "CHATBOT",
+                      },
+                    });
+                  });
+                }
+              }
+            }
+            const sql = await c3Sql(result.output);
+
+            return metadataDb.message.create({
+              data: {
+                content: sql,
+                chatId,
+                agent: "CHATBOT",
+                messageType: "SQL",
+              },
+            });
           },
           {
             // Define the request body schema using t.Object()
             body: t.Object({
               userQuery: t.String(),
               userFeedback: t.String(),
-              schema: t.String(),
+              chatId: t.String(),
             }),
             detail: {
               tags: ["prompt-analysis"],

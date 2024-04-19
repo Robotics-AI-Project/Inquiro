@@ -81,6 +81,5 @@ SELECT`;
 };
 
 const formatResult = (result: string) => {
-  if (result.startsWith("SELECT")) return result;
-  return `SELECT ${result}`;
+  return `SELECT ${result.replaceAll("```sql", "").replaceAll("```", "").replaceAll("SELECT", "")}`;
 };

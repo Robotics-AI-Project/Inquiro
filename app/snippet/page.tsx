@@ -10,34 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@client/components/ui/dropdown-menu";
 import { Input } from "@client/components/ui/input";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@client/components/ui/tooltip";
-import {
-  Check,
-  Copy,
-  MoreHorizontal,
-  Pencil,
-  Search,
-  Trash,
-} from "lucide-react";
-import { useState } from "react";
+import { MoreHorizontal, Pencil, Search, Trash } from "lucide-react";
 
 const Page = () => {
-  const [isCopied, setIsCopied] = useState(false);
   const sql =
     "SELECT EXTRACT(MONTH FROM completion_date) AS month_number, COUNT(*) AS num_completed_courses FROM completed_courses WHERE EXTRACT(YEAR FROM completion_date) = 2018 AND EXTRACT(MONTH FROM completion_date) BETWEEN 1 AND 6 GROUP BY EXTRACT(MONTH FROM completion_date) ORDER BY month_number;";
-
-  const onCopy = () => {
-    setIsCopied(true);
-    navigator.clipboard.writeText(sql);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1000);
-  };
   return (
     <div className="flex h-full">
       <Toolbar className="w-[400px] space-y-4">
@@ -106,26 +83,7 @@ const Page = () => {
             Add to dashboard
           </Button>
         </div>
-        <div className="relative">
-          <SQL sql={sql} />
-          <div className="absolute right-4 top-4 flex space-x-2">
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="h-auto w-auto p-2 text-white"
-                    onClick={onCopy}
-                  >
-                    {isCopied ? <Check size={18} /> : <Copy size={18} />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>📋 Copy</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
+        <SQL sql={sql} />
       </main>
     </div>
   );
