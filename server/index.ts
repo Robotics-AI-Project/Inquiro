@@ -24,6 +24,11 @@ import { promptAnalysis } from "./modules/prompt-analysis/prompt-analysys.servic
 
 import { t } from "elysia";
 import { enterpriseDb, metadataDb } from "./configs/db";
+import {
+  createSnippet,
+  getAllSnippets,
+  getSnippetById,
+} from "./modules/snippet/snippet.service";
 import { c3Sql } from "./modules/sql-generation/c3-sql";
 
 export const backendApp = intializeBaseBackend()
@@ -358,7 +363,7 @@ export const backendApp = intializeBaseBackend()
       )
       .group("/snippet", (app) =>
         app
-          .get("", ({ clerk }) => `Hello snippet ${clerk.id}`, {
+          .get("", ({ clerk }) => getAllSnippets(clerk.id), {
             detail: {
               tags: ["snippet"],
               description: "Get all snippets of user",
@@ -400,8 +405,7 @@ export const backendApp = intializeBaseBackend()
           })
           .get(
             "/:snippetId",
-            ({ clerk, params }) =>
-              `Hello snippet ${clerk.id} and snippet id ${params.snippetId}`,
+            ({ clerk, params }) => getSnippetById(clerk.id, params.snippetId),
             {
               detail: {
                 tags: ["snippet"],
@@ -440,6 +444,27 @@ export const backendApp = intializeBaseBackend()
                     },
                   },
                 },
+              },
+            },
+          )
+          .post(
+            "",
+            ({ clerk, body }) => createSnippet(clerk.id, body.name, body.sql),
+            {
+              body: t.Optional(
+                t.Object({
+                  name: t.String(),
+                  sql: t.String(),
+                }),
+              ),
+              detail: {
+                tags: ["snippet"],
+                description: "Create snippet",
+                security: [
+                  {
+                    bearer: [],
+                  },
+                ],
               },
             },
           ),
