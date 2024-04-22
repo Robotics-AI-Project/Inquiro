@@ -23,7 +23,8 @@ import {
 import { promptAnalysis } from "./modules/prompt-analysis/prompt-analysys.service";
 
 import { t } from "elysia";
-import { enterpriseDb, metadataDb } from "./configs/db";
+import { metadataDb } from "./configs/db";
+import { executeSQL } from "./modules/db/db.service";
 import {
   createSnippet,
   getAllSnippets,
@@ -486,27 +487,20 @@ export const backendApp = intializeBaseBackend()
         }),
       )
       .group("/sql-execution", (app) =>
-        app.post(
-          "",
-          ({ body }) => {
-            const stmt = enterpriseDb.prepare(body.sql);
-            return stmt.all();
+        app.post("", ({ body }) => executeSQL(body.sql), {
+          body: t.Object({
+            sql: t.String(),
+          }),
+          detail: {
+            tags: ["sql-execution"],
+            description: "Execute SQL",
+            security: [
+              {
+                bearer: [],
+              },
+            ],
           },
-          {
-            body: t.Object({
-              sql: t.String(),
-            }),
-            detail: {
-              tags: ["sql-execution"],
-              description: "Execute SQL",
-              security: [
-                {
-                  bearer: [],
-                },
-              ],
-            },
-          },
-        ),
+        }),
       ),
   );
 
