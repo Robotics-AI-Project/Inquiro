@@ -1,11 +1,11 @@
 import AppLayout from "@/client/components/app-layout";
-import ChatSidebar from "@/client/components/pages/chat/sidebar";
+import SnippetSidebar from "@/client/components/pages/snippet/sidebar";
 import { PropsWithChildren } from "react";
 
 type Props = PropsWithChildren;
 
 const Layout = ({ children }: Props) => {
-  return <AppLayout sideBar={<ChatSidebar />}>{children}</AppLayout>;
+  return <AppLayout sideBar={<SnippetSidebar />}>{children}</AppLayout>;
 };
 
 export default Layout;

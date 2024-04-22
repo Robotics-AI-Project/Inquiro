@@ -40,8 +40,8 @@ const DataTable = ({ data }: DataVisualizationProps) => {
 
   return (
     <div className="overflow-hidden rounded-lg border-[1px] border-border">
-      <div className="flex items-center justify-between bg-white p-3">
-        <p className="ml-2 text-xl font-semibold">Data table</p>
+      <div className="flex items-center justify-between bg-white p-6 pb-2">
+        <p className="text-xl font-semibold">Data table</p>
         <Popover>
           <PopoverTrigger>
             <OptionTriggerButton />
@@ -49,17 +49,6 @@ const DataTable = ({ data }: DataVisualizationProps) => {
           {/* @ts-ignore */}
           <PopoverContent className="max-h-44 overflow-scroll p-0">
             <div>
-              {/* <OptionSection title="Customize">
-                <div className="flex items-center gap-2 ">
-                  <p>Show</p>
-                  <Select>
-                    <SelectTrigger className="h-8 w-[72px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                  </Select>
-                  <p>entries</p>
-                </div>
-              </OptionSection> */}
               <OptionSection title="Manage Columns">
                 <div className="space-y-2">
                   {columnNames.map((columnName) => (

@@ -1,6 +1,6 @@
 "use client";
 
-import Toolbar from "@/client/components/toolbar";
+import Toolbar from "@/client/components/app-layout";
 import { Button } from "@/client/components/ui/button";
 import { Input } from "@/client/components/ui/input";
 import { Separator } from "@/client/components/ui/separator";
