@@ -1,42 +1,31 @@
-import BarChart from "@client/components/pages/chat/visualization/bar-chart";
-import DataTable from "@client/components/pages/chat/visualization/data-table";
-import LineGraph from "@client/components/pages/chat/visualization/line-graph";
-import { default as visPieChart } from "@client/components/pages/chat/visualization/pie-chart";
-import { DataVisualizationProps } from "@client/types/data";
+import { VisualizationType } from "@client/types/data";
 import { BarChartBig, Grid3X3, LineChart, PieChart } from "lucide-react";
 
 export const visualizationList: Readonly<
   {
-    key: string;
+    key: VisualizationType;
     name: string;
     icon: any;
-    visualizationComponent?: React.FC<DataVisualizationProps>;
   }[]
 > = [
   {
-    key: "data-table",
+    key: "TABLE",
     name: "Data Table",
     icon: Grid3X3,
-    visualizationComponent: DataTable,
   },
   {
-    key: "bar-graph",
+    key: "BAR",
     name: "Bar Graph",
     icon: BarChartBig,
-    visualizationComponent: BarChart,
   },
   {
-    key: "line-graph",
+    key: "LINE",
     name: "Line Graph",
     icon: LineChart,
-    visualizationComponent: LineGraph,
   },
   {
-    key: "pie-chart",
+    key: "PIE",
     name: "Pie Chart",
     icon: PieChart,
-    visualizationComponent: visPieChart,
   },
 ] as const;
-
-export type VisualizationKey = (typeof visualizationList)[number]["key"];

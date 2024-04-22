@@ -1,11 +1,19 @@
 "use client";
 
-import { Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { Check, Copy, Grid3X3 } from "lucide-react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { format } from "sql-formatter";
+import { visualizationList } from "../constants/data";
+import { VisualizationType } from "../types/data";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -13,9 +21,13 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-type Props = { sql: string };
+type Props = {
+  sql: string;
+  visualizationType: VisualizationType;
+  setVisualizationType: Dispatch<SetStateAction<VisualizationType>>;
+};
 
-const SQL = ({ sql }: Props) => {
+const SQL = ({ sql, setVisualizationType, visualizationType }: Props) => {
   const [isCopied, setIsCopied] = useState(false);
   const onCopy = () => {
     setIsCopied(true);
@@ -24,6 +36,11 @@ const SQL = ({ sql }: Props) => {
       setIsCopied(false);
     }, 1000);
   };
+
+  // const VisualizationIcon = visualizationList.find(
+  //   (visualization) => visualization.key === visualizationType
+  // )?.icon;
+
   return (
     <div className="relative">
       <SyntaxHighlighter
@@ -57,6 +74,31 @@ const SQL = ({ sql }: Props) => {
             <TooltipContent>📋 Copy</TooltipContent>
           </Tooltip>
         </TooltipProvider>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="rounded-lg">
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto w-auto p-1 text-white"
+            >
+              <Grid3X3 size={26} strokeWidth={1} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {visualizationList.map((visualization) => (
+              <DropdownMenuItem
+                key={visualization.key}
+                className="gap-2"
+                onClick={() => {
+                  setVisualizationType(visualization.key);
+                }}
+              >
+                <visualization.icon size={18} />
+                <span>{visualization.name}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 "use client";
 
-import SQL from "@/client/components/sql";
 import { Message } from "@/types/message";
 import { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import MessageItem from ".";
+import QueryDisplay from "./query-display";
 
 type Props = {
   messages: Message[];
@@ -19,9 +20,9 @@ const MessageList = ({ messages }: Props) => {
       {messages.map((message) => (
         <MessageItem key={message.id} agent={message.agent}>
           {message.messageType === "SQL" ? (
-            <SQL sql={message.content} />
+            <QueryDisplay sql={message.content} />
           ) : (
-            message.content
+            <ReactMarkdown>{message.content}</ReactMarkdown>
           )}
         </MessageItem>
       ))}

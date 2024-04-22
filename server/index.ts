@@ -23,7 +23,7 @@ import {
 import { promptAnalysis } from "./modules/prompt-analysis/prompt-analysys.service";
 
 import { t } from "elysia";
-import { metadataDb } from "./configs/db";
+import { enterpriseDb, metadataDb } from "./configs/db";
 import { c3Sql } from "./modules/sql-generation/c3-sql";
 
 export const backendApp = intializeBaseBackend()
@@ -459,6 +459,29 @@ export const backendApp = intializeBaseBackend()
             ],
           },
         }),
+      )
+      .group("/sql-execution", (app) =>
+        app.post(
+          "",
+          ({ body }) => {
+            const stmt = enterpriseDb.prepare(body.sql);
+            return stmt.all();
+          },
+          {
+            body: t.Object({
+              sql: t.String(),
+            }),
+            detail: {
+              tags: ["sql-execution"],
+              description: "Execute SQL",
+              security: [
+                {
+                  bearer: [],
+                },
+              ],
+            },
+          },
+        ),
       ),
   );
 
