@@ -1,6 +1,6 @@
 "use client";
 
-import SQL from "@/client/components/sql";
+import SQL from "@/client/components/pages/chat/sql";
 import { VisualizationType } from "@/client/types/data";
 import { useState } from "react";
 import Visualization from "../visualization";

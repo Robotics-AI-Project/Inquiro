@@ -4,6 +4,8 @@ import { ExecutedData } from "@/client/types/data";
 import { useQuery } from "@tanstack/react-query";
 import BarChart from "./bar-chart";
 import DataTable from "./data-table";
+import LineChart from "./line-chart";
+import PieChart from "./pie-chart";
 
 type Props = {
   sql: string;
@@ -30,6 +32,10 @@ const Visualization = ({ sql, visualizationType }: Props) => {
       return <DataTable data={data} />;
     case "BAR":
       return <BarChart data={data} />;
+    case "LINE":
+      return <LineChart data={data} />;
+    case "PIE":
+      return <PieChart data={data} />;
   }
   return <div>Unknown visualization</div>;
 };

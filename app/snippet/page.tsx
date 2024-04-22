@@ -1,6 +1,6 @@
 "use client";
 
-import SQL from "@client/components/sql";
+import SQL from "@/client/components/pages/chat/sql";
 import Toolbar from "@client/components/toolbar";
 import { Button } from "@client/components/ui/button";
 import {
