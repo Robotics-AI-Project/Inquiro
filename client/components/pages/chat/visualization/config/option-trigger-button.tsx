@@ -4,11 +4,11 @@ import { Settings } from "lucide-react";
 const OptionTriggerButton = () => {
   return (
     <Button
-      size="sm"
+      asChild
       variant="outline"
       className="h-max rounded-xl p-1 text-black/60 hover:text-black/80"
     >
-      <Settings />
+      <Settings size={32} />
     </Button>
   );
 };
