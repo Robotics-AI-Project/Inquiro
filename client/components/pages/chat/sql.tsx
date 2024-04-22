@@ -1,25 +1,20 @@
 "use client";
 
-import { Check, Copy, Grid3X3 } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Grid3X3 } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { format } from "sql-formatter";
-import { visualizationList } from "../constants/data";
-import { VisualizationType } from "../types/data";
-import { Button } from "./ui/button";
+import { visualizationList } from "../../../constants/data";
+import { VisualizationType } from "../../../types/data";
+import { Button } from "../../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
+} from "../../ui/dropdown-menu";
+import SaveSnippet from "./save-snippet";
 
 type Props = {
   sql: string;
@@ -27,20 +22,7 @@ type Props = {
   setVisualizationType: Dispatch<SetStateAction<VisualizationType>>;
 };
 
-const SQL = ({ sql, setVisualizationType, visualizationType }: Props) => {
-  const [isCopied, setIsCopied] = useState(false);
-  const onCopy = () => {
-    setIsCopied(true);
-    navigator.clipboard.writeText(sql);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1000);
-  };
-
-  // const VisualizationIcon = visualizationList.find(
-  //   (visualization) => visualization.key === visualizationType
-  // )?.icon;
-
+const SQL = ({ sql, setVisualizationType }: Props) => {
   return (
     <div className="relative">
       <SyntaxHighlighter
@@ -59,21 +41,7 @@ const SQL = ({ sql, setVisualizationType, visualizationType }: Props) => {
         })}
       </SyntaxHighlighter>
       <div className="absolute right-4 top-4 flex space-x-2">
-        <TooltipProvider delayDuration={100}>
-          <Tooltip>
-            <TooltipTrigger>
-              <Button
-                asChild
-                variant="outline"
-                className="h-auto w-auto p-2 text-white"
-                onClick={onCopy}
-              >
-                {isCopied ? <Check size={18} /> : <Copy size={18} />}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>📋 Copy</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <SaveSnippet sql={sql} />
         <DropdownMenu>
           <DropdownMenuTrigger className="rounded-lg">
             <Button
