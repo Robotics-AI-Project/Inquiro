@@ -3,7 +3,7 @@
 import ListButton from "@/client/components/list-button";
 import { Skeleton } from "@/client/components/ui/skeleton";
 import { useDashboardList } from "@/client/hooks/dashboard";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 type Props = {
@@ -13,6 +13,7 @@ type Props = {
 const DashboardList = ({ search }: Props) => {
   const { dashboardId } = useParams<{ dashboardId?: string }>();
   const { data, isLoading, isError, error } = useDashboardList();
+  const router = useRouter();
   const displayedData = useMemo(() => {
     if (!data) return [];
     if (!search) return data;
@@ -31,15 +32,21 @@ const DashboardList = ({ search }: Props) => {
     );
   }
   if (!data) return <p>Something wrong</p>;
+
+  const onNavigate = (id: string) => {
+    router.push(`/dashboard/${id}`);
+  };
+
   return (
     <div className="space-y-1">
       {displayedData.map((dashboard) => (
         <ListButton
+          id={dashboard.id}
           key={dashboard.id}
           isSelected={dashboard.id === dashboardId}
           loading={dashboard.id === "CREATING"}
           name={dashboard.name}
-          href={`/dashboard/${dashboard.id}`}
+          onClick={onNavigate}
           onDelete={() => {}}
           onRename={() => {}}
         />

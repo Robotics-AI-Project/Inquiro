@@ -1,7 +1,6 @@
 "use client";
 
 import { Loader2, MoreHorizontal, Pencil, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { cn } from "../libs/utils";
 import { Button, ButtonProps } from "./ui/button";
 import {
@@ -11,37 +10,43 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-type Props = {
+type Props = Omit<ButtonProps, "onClick"> & {
   onRename: () => void;
   onDelete: () => void;
+  id: string;
   name: string;
   isSelected: boolean;
-  href: string;
+  onClick?: (id: string) => void;
   loading?: boolean;
-} & ButtonProps;
+  startIcon?: React.ReactNode;
+};
 
 const ListButton = ({
   isSelected,
+  id,
   name,
   onDelete,
   onRename,
-  href,
   disabled,
   loading,
+  className,
+  onClick,
+  startIcon,
 }: Props) => {
-  const router = useRouter();
   return (
     <Button
       variant={isSelected ? "secondary" : "ghost"}
       className={cn(
         "h-auto w-full justify-start gap-2 px-3 py-[6px]",
         !isSelected && "font-normal",
+        className,
       )}
       disabled={disabled || loading}
-      onClick={() => {
-        if (!isSelected) router.push(href);
+      onClick={(e) => {
+        if (!isSelected && onClick) onClick(id);
       }}
     >
+      {startIcon && startIcon}
       {loading && <Loader2 className="animate-spin" />}
       <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start ">
         {name}

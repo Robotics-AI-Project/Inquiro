@@ -3,16 +3,28 @@
 import ListButton from "@/client/components/list-button";
 import { Skeleton } from "@/client/components/ui/skeleton";
 import { useGetAllSnippets } from "@/client/hooks/snippet";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 type Props = {
   search: string;
+  disabledIds?: string[];
+  className?: string;
+  startIcon?: React.ReactNode;
+  onClick?: (id: string) => void;
 };
 
-const SnippetList = ({ search }: Props) => {
+const SnippetList = ({
+  search,
+  className,
+  disabledIds,
+  startIcon,
+  onClick,
+}: Props) => {
   const { snippetId } = useParams<{ snippetId?: string }>();
   const { data, error, isError, isLoading } = useGetAllSnippets();
+
+  const router = useRouter();
 
   const filteredData = useMemo(() => {
     if (!data) return [];
@@ -32,6 +44,10 @@ const SnippetList = ({ search }: Props) => {
     );
   }
 
+  const onNavigate = (id: string) => {
+    router.push(`/snippet/${id}`);
+  };
+
   return (
     <div className="w-full space-y-1">
       {filteredData.map((snippet) => {
@@ -40,10 +56,14 @@ const SnippetList = ({ search }: Props) => {
           <ListButton
             key={snippet.id}
             isSelected={isSelected}
+            disabled={disabledIds?.includes(snippet.id)}
+            id={snippet.id}
             name={snippet.name}
-            href={`/snippet/${snippet.id}`}
+            onClick={!onClick ? onNavigate : onClick}
             onDelete={() => {}}
             onRename={() => {}}
+            startIcon={startIcon}
+            className={className}
           />
         );
       })}

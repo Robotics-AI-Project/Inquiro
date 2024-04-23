@@ -46,6 +46,10 @@ const ChatList = () => {
         } as Record<string, NonNullable<typeof data>>,
       ) ?? {};
 
+  const onNavigate = (id: string) => {
+    router.push(`/chat/${id}`);
+  };
+
   return Object.keys(groupedData).map((key) => {
     const chats = groupedData[key];
     if (chats.length === 0) return null;
@@ -57,9 +61,10 @@ const ChatList = () => {
           return (
             <ListButton
               key={chat.id}
+              id={chat.id}
               isSelected={isSelected}
               name={chat.name}
-              href={`/chat/${chat.id}`}
+              onClick={onNavigate}
               onDelete={async () => {
                 router.push(`/chat`);
                 deleteChat(chat.id);
