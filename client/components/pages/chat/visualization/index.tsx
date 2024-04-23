@@ -10,9 +10,11 @@ import PieChart from "./pie-chart";
 type Props = {
   sql: string;
   visualizationType: "TABLE" | "BAR" | "LINE" | "PIE";
+  className?: string;
+  name?: string;
 };
 
-const Visualization = ({ sql, visualizationType }: Props) => {
+const Visualization = ({ sql, visualizationType, className, name }: Props) => {
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["sql-execution", sql],
     queryFn: async () => {
@@ -29,13 +31,13 @@ const Visualization = ({ sql, visualizationType }: Props) => {
 
   switch (visualizationType) {
     case "TABLE":
-      return <DataTable data={data} />;
+      return <DataTable data={data} className={className} name={name} />;
     case "BAR":
-      return <BarChart data={data} />;
+      return <BarChart data={data} className={className} name={name} />;
     case "LINE":
-      return <LineChart data={data} />;
+      return <LineChart data={data} className={className} name={name} />;
     case "PIE":
-      return <PieChart data={data} />;
+      return <PieChart data={data} className={className} name={name} />;
   }
   return <div>Unknown visualization</div>;
 };
