@@ -20,6 +20,38 @@ export const useChatList = () => {
   };
 };
 
+export const useRenameChat = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ chatId, name }: { chatId: string; name: string }) => {
+      const { data, error } = await backendClient.api.chat[chatId].patch({
+        name,
+      });
+      if (error) throw new Error(error.name);
+      return data;
+    },
+    onMutate: async ({ chatId, name }) => {
+      await queryClient.cancelQueries({ queryKey: ["chat"] });
+
+      const previousChats = queryClient.getQueryData<ChatData>(["chat"]) ?? [];
+
+      // Optimistically update to the new value
+      queryClient.setQueryData<ChatData>(
+        ["chat"],
+        previousChats.map((chat) =>
+          chat.id === chatId ? { ...chat, name } : chat,
+        ),
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousChats };
+    },
+    onError: (_error, { chatId, name }, context) => {
+      queryClient.setQueryData(["chat"], context?.previousChats);
+    },
+  });
+};
+
 export const useDeleteChat = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: deleteChat } = useMutation({
