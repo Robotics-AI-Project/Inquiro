@@ -19,7 +19,9 @@ export const useGetAllSnippets = () => {
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["get-all-snippets"],
     queryFn: async () => {
-      const { data, error } = await backendClient.api.snippet.get();
+      const { data, error } = await backendClient.api.snippet.get({
+        $query: {},
+      });
       if (error) throw new Error(error.name);
       return data;
     },
@@ -77,5 +79,22 @@ export const useSnippetRename = (id: string) => {
         queryKey: ["get-snippet-by-id", id],
       });
     },
+  });
+};
+
+export const useGetMultipleSnippets = (ids?: string[]) => {
+  return useQuery({
+    queryKey: ["get-multiple-snippets", ids],
+    queryFn: async () => {
+      if (!ids) return Promise.resolve([]);
+      const { data, error } = await backendClient.api.snippet.get({
+        $query: {
+          snippetIds: ids.join(","),
+        },
+      });
+      if (error) throw new Error(error.name);
+      return data;
+    },
+    enabled: !!ids,
   });
 };
