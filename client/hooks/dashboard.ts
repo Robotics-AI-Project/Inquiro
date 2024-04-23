@@ -1,7 +1,32 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Static, t } from "elysia";
 import { backendClient } from "../libs/api";
 import { VisualizationType } from "../types/data";
+
+type Dashboard = Omit<
+  NonNullable<
+    Awaited<
+      ReturnType<(typeof backendClient.api.dashboard)[":dashboardId"]["get"]>
+    >["data"]
+  >,
+  "content"
+> & {
+  content:
+    | {
+        layout: {
+          i: string;
+          x: number;
+          y: number;
+          w: number;
+          h: number;
+          minW: number;
+          minH: number;
+        };
+        config: {
+          visualizationType: VisualizationType;
+        };
+      }[]
+    | null;
+};
 
 export const useDashboardList = () => {
   return useQuery({
@@ -26,27 +51,35 @@ export const useGetDashboardById = (dashboardId: string) => {
   });
 
   return {
-    data: data as
-      | (Omit<NonNullable<typeof data>, "content"> & {
-          content: {
-            layout: {
-              i: string;
-              x: number;
-              y: number;
-              w: number;
-              h: number;
-              minW: number;
-              minH: number;
-            };
-            config: {
-              visualizationType: VisualizationType;
-            };
-          }[];
-        })
-      | null
-      | undefined,
+    data: data as Dashboard | null | undefined,
     ...props,
   };
+};
+
+export const useUpdateDashboardContent = (dashboardId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["update-dashboard-content", dashboardId],
+    mutationFn: async (content: Dashboard["content"]) => {
+      const { data, error } = await backendClient.api.dashboard[
+        dashboardId
+      ].patch({
+        content,
+      });
+
+      if (error) throw new Error(error.name);
+      return data;
+    },
+    onMutate: async (content: Dashboard["content"]) => {
+      await queryClient.cancelQueries({
+        queryKey: ["dashboard", dashboardId],
+      });
+
+      queryClient.setQueryData<
+        Awaited<ReturnType<typeof useGetDashboardById>["data"]>
+      >(["dashboard", dashboardId], (old) => (old ? { ...old, content } : old));
+    },
+  });
 };
 
 export const useRenameDashboard = (dashboardId: string) => {
@@ -93,13 +126,11 @@ export const useRenameDashboard = (dashboardId: string) => {
   });
 };
 
-const ContentType = t.Object(t.Any());
-type ContentType = Static<typeof ContentType>;
-
 export const useEditDashboardContent = (dashboardId: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit-dashboard-content", dashboardId],
-    mutationFn: async (content: ContentType) => {
+    mutationFn: async (content: Dashboard["content"]) => {
       const { data, error } = await backendClient.api.dashboard[
         dashboardId
       ].patch({
@@ -108,6 +139,19 @@ export const useEditDashboardContent = (dashboardId: string) => {
 
       if (error) throw new Error(error.name);
       return data;
+    },
+    onMutate: (content: Dashboard["content"]) => {
+      queryClient.cancelQueries({
+        queryKey: ["dashboard", dashboardId],
+      });
+
+      queryClient.setQueryData<Dashboard>(["dashboard", dashboardId], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          content,
+        };
+      });
     },
   });
 };

@@ -5,6 +5,9 @@ import {
   getChatById,
   updateChatById,
 } from "./modules/chat/chat.service";
+
+import { TypeSystem } from "@sinclair/typebox/system";
+
 import {
   addKnowledgeBaseFromGoogleDriveFolderID,
   createKnowledgeBase,
@@ -38,6 +41,8 @@ import {
   updateSnippetById,
 } from "./modules/snippet/snippet.service";
 import { c3Sql } from "./modules/sql-generation/c3-sql";
+
+TypeSystem.AllowArrayObjects = true;
 
 export const backendApp = intializeBaseBackend()
   .use(publicBackend)
@@ -585,7 +590,7 @@ export const backendApp = intializeBaseBackend()
             {
               body: t.Object({
                 name: t.Optional(t.String()),
-                content: t.Optional(t.Object(t.Any())),
+                content: t.Optional(t.Any()),
               }),
             },
           ),
