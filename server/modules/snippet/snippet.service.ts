@@ -1,9 +1,12 @@
 import { metadataDb } from "@/server/configs/db";
 
-export const getAllSnippets = async (userId: string) => {
+export const getAllSnippets = async (userId: string, snippetIds?: string) => {
   return metadataDb.snippet.findMany({
     where: {
       userId,
+      id: {
+        in: snippetIds?.split(","),
+      },
     },
     orderBy: {
       updatedAt: "desc",
