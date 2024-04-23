@@ -5,6 +5,9 @@ export const getAllSnippets = async (userId: string) => {
     where: {
       userId,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 };
 
@@ -28,5 +31,19 @@ export const getSnippetById = async (userId: string, snippetId: string) => {
       userId,
       id: snippetId,
     },
+  });
+};
+
+export const updateSnippetById = async (
+  snippetId: string,
+  data: {
+    name?: string;
+  },
+) => {
+  return metadataDb.snippet.update({
+    where: {
+      id: snippetId,
+    },
+    data,
   });
 };

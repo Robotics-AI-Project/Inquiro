@@ -29,6 +29,7 @@ import {
   createSnippet,
   getAllSnippets,
   getSnippetById,
+  updateSnippetById,
 } from "./modules/snippet/snippet.service";
 import { c3Sql } from "./modules/sql-generation/c3-sql";
 
@@ -461,6 +462,24 @@ export const backendApp = intializeBaseBackend()
               detail: {
                 tags: ["snippet"],
                 description: "Create snippet",
+                security: [
+                  {
+                    bearer: [],
+                  },
+                ],
+              },
+            },
+          )
+          .put(
+            "/:snippetId",
+            ({ params, body }) => updateSnippetById(params.snippetId, body),
+            {
+              body: t.Object({
+                name: t.Optional(t.String()),
+              }),
+              detail: {
+                tags: ["snippet"],
+                description: "Rename snippet",
                 security: [
                   {
                     bearer: [],
