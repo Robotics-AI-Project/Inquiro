@@ -1,5 +1,7 @@
 export type DataVisualizationProps = {
   data: ExecutedData;
+  className?: string;
+  name?: string;
 };
 
 export type ExecutedData = Record<string, DataType>[];
