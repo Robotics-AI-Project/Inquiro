@@ -1,3 +1,4 @@
+import SnippetHeader from "@/client/components/pages/snippet/snippet-header";
 import SQLDisplay from "@/client/components/pages/snippet/sql-display";
 import Visualizations from "@/client/components/pages/snippet/visualizations";
 import { executeSQL } from "@/server/modules/db/db.service";
@@ -24,7 +25,7 @@ const Page = async ({ params: { snippetId } }: Props) => {
   return (
     <div className="h-[calc(100vh-60px)] space-y-2 overflow-y-scroll p-4">
       <div>
-        <h1 className="text-3xl font-bold">{snippetData.name}</h1>
+        <SnippetHeader name={snippetData.name} snippetId={snippetId} />
         <p className="text-gray-500">
           Created at: {snippetData.createdAt.toISOString().split("T")[0]}
         </p>
