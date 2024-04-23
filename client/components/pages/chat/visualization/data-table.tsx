@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
 } from "@/client/components/ui/popover";
 import { formatNumber } from "@/client/libs/data";
+import { cn } from "@/client/libs/utils";
 import {
   Table,
   TableBody,
@@ -20,7 +21,7 @@ import { useState } from "react";
 import OptionSection from "./config/option-section";
 import OptionTriggerButton from "./config/option-trigger-button";
 
-const DataTable = ({ data }: DataVisualizationProps) => {
+const DataTable = ({ data, className, name }: DataVisualizationProps) => {
   const columnNames = Object.keys(data[0]);
   const [selectedColumns, setSelectedColumns] = useState<
     Record<(typeof columnNames)[number], boolean>
@@ -39,9 +40,16 @@ const DataTable = ({ data }: DataVisualizationProps) => {
   );
 
   return (
-    <div className="overflow-hidden rounded-lg border-[1px] border-border">
+    <div
+      className={cn(
+        "h-full w-full overflow-hidden rounded-lg border-[1px] border-border",
+        className,
+      )}
+    >
       <div className="flex items-center justify-between bg-white p-6 pb-2">
-        <p className="text-xl font-semibold">Data table</p>
+        <p className="select-none text-xl font-semibold">
+          {name ?? "Data table"}
+        </p>
         <Popover>
           <PopoverTrigger>
             <OptionTriggerButton />
@@ -88,7 +96,7 @@ const DataTable = ({ data }: DataVisualizationProps) => {
             {displayedColumns.map((columnName) => (
               <TableHead
                 key={columnName}
-                className="text-center font-semibold text-black"
+                className="select-none text-center font-semibold text-black"
               >
                 {columnName}
               </TableHead>
@@ -103,7 +111,10 @@ const DataTable = ({ data }: DataVisualizationProps) => {
                 let display: string = value.toString();
                 if (typeof value === "number") display = formatNumber(value);
                 return (
-                  <TableCell key={columnName} className="text-center">
+                  <TableCell
+                    key={columnName}
+                    className="select-none text-center"
+                  >
                     {display}
                   </TableCell>
                 );

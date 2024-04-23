@@ -1,12 +1,10 @@
 "use client";
 
-import Toolbar from "@/client/components/app-layout";
-import { Button } from "@/client/components/ui/button";
-import { Input } from "@/client/components/ui/input";
-import { Separator } from "@/client/components/ui/separator";
-import { Tree, TreeDataItem } from "@/client/components/ui/tree";
+import AppLayout from "@/client/components/app-layout";
+import Sidebar from "@/client/components/pages/dashboard/sidebar";
+import { TreeDataItem } from "@/client/components/ui/tree";
 
-import { Plus, Search, Shield, Ticket } from "lucide-react";
+import { Shield, Ticket } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 
@@ -35,32 +33,35 @@ const Layout = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <div className="flex h-full">
-      <Toolbar className="min-w-[224px] max-w-[225px] space-y-4">
-        <div className="relative">
-          <Input placeholder="Search dashboard" className="pr-8" />
-          <Search
-            size={18}
-            className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground"
-          />
-        </div>
-        <Button className="h-auto w-full justify-between px-3 py-[6px]">
-          <p className="text-sm">New Dashboard</p>
-          <Plus size={20} />
-        </Button>
-        <div className="space-y-2">
-          <p className="ml-2 text-sm text-muted-foreground">All Dashboards</p>
-          <Separator />
-          <Tree
-            selectedItemId={dashboardId}
-            data={data}
-            className="h-[800px]"
-            onSelectChange={handleSelectChange}
-          />
-        </div>
-      </Toolbar>
+    <AppLayout sideBar={<Sidebar />}>
       <div className="flex h-full w-full">{children}</div>
-    </div>
+    </AppLayout>
+    // <div className="flex h-full">
+    //   <Toolbar className="min-w-[224px] max-w-[225px] space-y-4">
+    //     <div className="relative">
+    //       <Input placeholder="Search dashboard" className="pr-8" />
+    //       <Search
+    //         size={18}
+    //         className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground"
+    //       />
+    //     </div>
+    //     <Button className="h-auto w-full justify-between px-3 py-[6px]">
+    //       <p className="text-sm">New Dashboard</p>
+    //       <Plus size={20} />
+    //     </Button>
+    //     <div className="space-y-2">
+    //       <p className="ml-2 text-sm text-muted-foreground">All Dashboards</p>
+    //       <Separator />
+    //       <Tree
+    //         selectedItemId={dashboardId}
+    //         data={data}
+    //         className="h-[800px]"
+    //         onSelectChange={handleSelectChange}
+    //       />
+    //     </div>
+    //   </Toolbar>
+    //   <div className="flex h-full w-full">{children}</div>
+    // </div>
   );
 };
 

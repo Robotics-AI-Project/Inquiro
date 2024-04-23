@@ -6,7 +6,7 @@ const OptionTriggerButton = () => {
     <Button
       asChild
       variant="outline"
-      className="h-max rounded-xl p-1 text-black/60 hover:text-black/80"
+      className="react-grid-no-drag h-max rounded-xl p-1 text-black/60 hover:text-black/80 "
     >
       <Settings size={32} />
     </Button>

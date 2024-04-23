@@ -5,6 +5,15 @@ import GridLayout from "react-grid-layout";
 
 import { useState } from "react";
 
+import EditableHeader from "@/client/components/editable-header";
+import Visualization from "@/client/components/pages/chat/visualization";
+import { Button } from "@/client/components/ui/button";
+import { Skeleton } from "@/client/components/ui/skeleton";
+import {
+  useGetDashboardById,
+  useRenameDashboard,
+} from "@/client/hooks/dashboard";
+import { useGetMultipleSnippets } from "@/client/hooks/snippet";
 import "@client/styles/base-grid-layout.css";
 import "@client/styles/base-resizable.css";
 import "@client/styles/custom-resizable.css";
@@ -15,58 +24,91 @@ type Props = {
   };
 };
 
-const Page = ({ params: {
-  dashboardId
-} }: Props) => {
-  const layout = [
-    { i: "a", x: 0, y: 0, w: 4, h: 6, minW: 4, minH: 6 },
-    { i: "b", x: 4, y: 0, w: 4, h: 6, minW: 4, minH: 6 },
-    { i: "c", x: 8, y: 0, w: 4, h: 16, minW: 4, minH: 6 },
-    { i: "d", x: 0, y: 6, w: 8, h: 6, minW: 4, minH: 6 },
-  ];
+const Page = ({ params: { dashboardId } }: Props) => {
+  const globalMinimumTile = {
+    minW: 4,
+    minH: 6,
+  };
+
   const [isDragging, setIsDragging] = useState(false);
+  const {
+    data: dashboardData,
+    isLoading,
+    isError,
+    error,
+  } = useGetDashboardById(dashboardId);
+
+  const layout = dashboardData?.content?.map(({ layout }) => layout) ?? [];
+
+  const { data: snippetDatas } = useGetMultipleSnippets(
+    layout.map(({ i }) => i),
+  );
+  const { mutateAsync: onRename } = useRenameDashboard(dashboardId);
+
+  if (isLoading)
+    return (
+      <div className="flex flex-1 flex-col space-y-4 overflow-y-scroll p-10">
+        <Skeleton className="h-7 w-56" />
+        <Skeleton className="h-[640px] w-full" />
+      </div>
+    );
+  if (isError) {
+    console.error(error);
+    return <p>Failed to fetch dashboard data</p>;
+  }
+  if (!dashboardData) return <p>Something wrong</p>;
+
+  const { name, content } = dashboardData;
+
+  const indexibleSnippetDatas = snippetDatas?.reduce(
+    (acc, snippetData) => ({
+      ...acc,
+      [snippetData.id]: snippetData,
+    }),
+    {} as Record<string, (typeof snippetDatas)[number]>,
+  );
+
   return (
     <div className="flex flex-1 flex-col space-y-4 overflow-y-scroll p-10">
-      <h1 className="text-2xl font-semibold">
-        Roots Coffee Weekly Sales and Member Status
-      </h1>
-      <GridLayout
-        resizeHandles={["se", "sw", "ne", "nw", "n", "s", "w", "e"]}
-        onDragStart={() => setIsDragging(true)}
-        onDragStop={() => setIsDragging(false)}
-        className={cn(isDragging && "react-grid-dragging")}
-        layout={layout}
-        cols={12}
-        rowHeight={30}
-        width={1200}
-      >
-        <div
-          key="a"
-          className="rounded-3xl border-[1px] border-solid border-border bg-white p-6"
+      <div className="flex justify-between">
+        <EditableHeader name={name} onRename={onRename} />
+        <Button variant="outline">Add Snippet</Button>
+      </div>
+      {layout.length > 0 && indexibleSnippetDatas && (
+        <GridLayout
+          resizeHandles={["se", "sw", "ne", "nw", "n", "s", "w", "e"]}
+          onDragStart={() => setIsDragging(true)}
+          onDragStop={() => setIsDragging(false)}
+          className={cn(isDragging && "react-grid-dragging")}
+          layout={layout}
+          onLayoutChange={(layout) => {
+            console.log("layout change", layout);
+          }}
+          cols={12}
+          rowHeight={40}
+          width={1200}
+          draggableCancel=".react-grid-no-drag"
         >
-          <p className="text-2xl font-semibold">Weekly Balance</p>
-        </div>
-        <div
-          key="b"
-          className="rounded-3xl border-[1px] border-solid border-border bg-white p-6"
-        >
-          <p className="text-2xl font-semibold">Branch Sales</p>
-        </div>
-        <div
-          key="c"
-          className="rounded-3xl border-[1px] border-solid border-border bg-white p-6"
-        >
-          <p className="text-2xl font-semibold">
-            Distribution of sales across platforms
-          </p>
-        </div>
-        <div
-          key="d"
-          className="rounded-3xl border-[1px] border-solid border-border bg-white p-6"
-        >
-          <p className="text-2xl font-semibold">Highest sales: $870.93</p>
-        </div>
-      </GridLayout>
+          {content.map(({ layout, config }) => {
+            const { i: snippetId } = layout;
+            const snippetData = indexibleSnippetDatas[snippetId];
+            return (
+              <div
+                key={snippetId}
+                className="overflow-clip rounded-3xl border-[1px] border-solid border-border"
+              >
+                <Visualization
+                  sql={snippetData.sql}
+                  visualizationType={config.visualizationType}
+                  name={snippetData.name}
+                  className="border-none"
+                />
+              </div>
+            );
+          })}
+          {/* <div key="e64c266d-4be2-4250-ab58-97c77c39ca97">Hello</div> */}
+        </GridLayout>
+      )}
     </div>
   );
 };

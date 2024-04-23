@@ -13,13 +13,14 @@ import {
   SelectValue,
 } from "@/client/components/ui/select";
 import { formatNumber } from "@/client/libs/data";
+import { cn } from "@/client/libs/utils";
 import { DataVisualizationProps } from "@client/types/data";
 import { Card, Title, BarChart as TremorBarChart } from "@tremor/react";
 import { useState } from "react";
 import OptionSection from "./config/option-section";
 import OptionTriggerButton from "./config/option-trigger-button";
 
-const BarChart = ({ data }: DataVisualizationProps) => {
+const BarChart = ({ data, className, name }: DataVisualizationProps) => {
   const columnNames = Object.keys(data[0]);
   const [{ index, categories }, setBarChartConfig] = useState<{
     index: (typeof columnNames)[number];
@@ -29,9 +30,11 @@ const BarChart = ({ data }: DataVisualizationProps) => {
     categories: columnNames.slice(1),
   });
   return (
-    <Card className="h-full w-full bg-white">
+    <Card className={cn("h-full w-full bg-white", className)}>
       <div className="flex items-center justify-between">
-        <Title className="text-xl font-semibold">Bar Chart</Title>
+        <Title className="select-none text-xl font-semibold">
+          {name ?? "Bar Chart"}
+        </Title>
         <Popover>
           <PopoverTrigger>
             <OptionTriggerButton />

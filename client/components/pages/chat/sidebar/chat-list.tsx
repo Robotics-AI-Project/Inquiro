@@ -1,16 +1,8 @@
 "use client";
 
+import ListButton from "@/client/components/list-button";
 import { useChatList, useDeleteChat } from "@/client/hooks/chat";
-import { cn } from "@/client/libs/utils";
-import { Button } from "@client/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@client/components/ui/dropdown-menu";
 import { Skeleton } from "@client/components/ui/skeleton";
-import { Loader2, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 const ChatList = () => {
@@ -63,57 +55,19 @@ const ChatList = () => {
         {chats.map((chat) => {
           const isSelected = chatId === chat.id;
           return (
-            <Button
+            <ListButton
               key={chat.id}
-              variant={isSelected ? "secondary" : "ghost"}
-              className={cn(
-                "h-auto w-auto justify-start gap-2 px-3 py-[6px]",
-                !isSelected && "font-normal",
-              )}
-              onClick={() => {
-                if (!isSelected) router.push(`/chat/${chat.id}`);
+              isSelected={isSelected}
+              name={chat.name}
+              href={`/chat/${chat.id}`}
+              onDelete={async () => {
+                router.push(`/chat`);
+                deleteChat(chat.id);
               }}
+              onRename={() => {}}
               disabled={chat.id === "OPTIMISTIC"}
-            >
-              {chat.id === "OPTIMISTIC" && <Loader2 className="animate-spin" />}
-              <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start ">
-                {chat.name}
-              </p>
-              {isSelected && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild className="rounded-lg">
-                    <Button
-                      asChild
-                      variant="secondary"
-                      className="h-auto w-auto rounded-sm p-0"
-                    >
-                      <MoreHorizontal size={20} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="rounded-lg">
-                    <DropdownMenuItem className="rounded-md">
-                      <div className="flex items-center space-x-2">
-                        <Pencil size={18} />
-                        <p>Rename</p>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="rounded-md text-red-500 focus:bg-red-200 focus:text-red-600"
-                      key={`dropdown-delete-${chat.id}`}
-                      onClick={async () => {
-                        router.push(`/chat`);
-                        deleteChat(chat.id);
-                      }}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <Trash size={18} />
-                        <p>Delete chat</p>
-                      </div>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </Button>
+              loading={chat.id === "OPTIMISTIC"}
+            />
           );
         })}
       </div>

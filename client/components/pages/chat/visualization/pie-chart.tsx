@@ -17,13 +17,14 @@ import {
 } from "@/client/components/ui/select";
 
 import { formatNumber } from "@/client/libs/data";
+import { cn } from "@/client/libs/utils";
 import { DataVisualizationProps } from "@client/types/data";
 import { Card, DonutChart, Title } from "@tremor/react";
 import { useState } from "react";
 import OptionSection from "./config/option-section";
 import OptionTriggerButton from "./config/option-trigger-button";
 
-const PieChart = ({ data }: DataVisualizationProps) => {
+const PieChart = ({ data, className, name }: DataVisualizationProps) => {
   const numericalColumns = Object.keys(data[0]).filter(
     (colName) => typeof data[0][colName] === "number",
   );
@@ -37,9 +38,9 @@ const PieChart = ({ data }: DataVisualizationProps) => {
   });
 
   return (
-    <Card className="h-full w-full bg-white">
+    <Card className={cn("h-full w-full bg-white", className)}>
       <div className="flex items-center justify-between">
-        <Title className="text-xl font-semibold">Pie Chart</Title>
+        <Title className="text-xl font-semibold">{name ?? "Pie Chart"}</Title>
         <Popover>
           <PopoverTrigger>
             <OptionTriggerButton />
