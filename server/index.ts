@@ -24,6 +24,12 @@ import { promptAnalysis } from "./modules/prompt-analysis/prompt-analysys.servic
 
 import { t } from "elysia";
 import { metadataDb } from "./configs/db";
+import {
+  createDashboard,
+  getAllDashboards,
+  getDashboardById,
+  updateDashboardById,
+} from "./modules/dashboard/dashboard.service";
 import { executeSQL } from "./modules/db/db.service";
 import {
   createSnippet,
@@ -365,36 +371,44 @@ export const backendApp = intializeBaseBackend()
       )
       .group("/snippet", (app) =>
         app
-          .get("", ({ clerk }) => getAllSnippets(clerk.id), {
-            detail: {
-              tags: ["snippet"],
-              description: "Get all snippets of user",
-              security: [
-                {
-                  bearer: [],
-                },
-              ],
-              responses: {
-                200: {
-                  description: "OK",
-                  content: {
-                    "application/json": {
-                      schema: {
-                        type: "array",
-                        items: {
-                          type: "object",
-                          properties: {
-                            id: {
-                              type: "string",
-                            },
-                            name: {
-                              type: "string",
-                            },
-                            createdAt: {
-                              type: "string",
-                            },
-                            updatedAt: {
-                              type: "string",
+          .get(
+            "",
+            ({ clerk, query: { snippetIds } }) =>
+              getAllSnippets(clerk.id, snippetIds),
+            {
+              query: t.Object({
+                snippetIds: t.Optional(t.String()),
+              }),
+              detail: {
+                tags: ["snippet"],
+                description: "Get all snippets of user",
+                security: [
+                  {
+                    bearer: [],
+                  },
+                ],
+                responses: {
+                  200: {
+                    description: "OK",
+                    content: {
+                      "application/json": {
+                        schema: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              id: {
+                                type: "string",
+                              },
+                              name: {
+                                type: "string",
+                              },
+                              createdAt: {
+                                type: "string",
+                              },
+                              updatedAt: {
+                                type: "string",
+                              },
                             },
                           },
                         },
@@ -404,7 +418,7 @@ export const backendApp = intializeBaseBackend()
                 },
               },
             },
-          })
+          )
           .get(
             "/:snippetId",
             ({ clerk, params }) => getSnippetById(clerk.id, params.snippetId),
@@ -520,6 +534,61 @@ export const backendApp = intializeBaseBackend()
             ],
           },
         }),
+      )
+      .group("/dashboard", (app) =>
+        app
+          .get("", ({ clerk }) => getAllDashboards(clerk.id), {
+            detail: {
+              tags: ["dashboard"],
+              description: "Get all dashboards of user",
+              security: [
+                {
+                  bearer: [],
+                },
+              ],
+            },
+          })
+          .post("", ({ clerk, body }) => createDashboard(clerk.id, body), {
+            body: t.Object({
+              name: t.Optional(t.String()),
+            }),
+            detail: {
+              tags: ["dashboard"],
+              description: "Create dashboard",
+              security: [
+                {
+                  bearer: [],
+                },
+              ],
+            },
+          })
+          .get(
+            "/:dashboardId",
+            ({ clerk, params }) =>
+              getDashboardById(clerk.id, params.dashboardId),
+            {
+              detail: {
+                tags: ["dashboard"],
+                description: "Get dashboard by id",
+                security: [
+                  {
+                    bearer: [],
+                  },
+                ],
+              },
+            },
+          )
+          .patch(
+            "/:dashboardId",
+            ({ clerk, body, params }) =>
+              updateDashboardById(clerk.id, params.dashboardId, body),
+            {
+              body: t.Object({
+                name: t.Optional(t.String()),
+                content: t.Optional(t.Object(t.Any())),
+              }),
+            },
+          ),
       ),
   );
 
